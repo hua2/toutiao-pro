@@ -17,14 +17,14 @@
           <p>原创</p>
         </div>
         <div class="flex justify-between mt-32">
-          <ul>
-            <li>展现 7907</li>
-            <li>阅读 7907</li>
-            <li>点赞 7907</li>
-            <li>评论 7907</li>
-            <li>展现 7907</li>
-          </ul>
-          <div class="flex">
+          <div style="min-width:365px">
+            <span>展现 7907</span>
+            <span>阅读 7907</span>
+            <span>点赞 7907</span>
+            <span>评论 7907</span>
+            <span>展现 7907</span>
+          </div>
+          <div style="min-width:268">
             <span>查看数据</span>
             <span>查看评论</span>
             <span>编辑</span>
@@ -116,15 +116,12 @@ export default {
       color: #222;
       margin-bottom: 12px;
     }
-    li {
-      display: inline-block;
-      margin-right: 24px;
-    }
     span {
       cursor: pointer;
+        //  min-width: 68px;
       font-size: 14px;
       font-weight: 400;
-      margin-left: 24px;
+      margin-left: 12px;
       color: rgba(0, 0, 0, 0.85);
       transition: all 0.3s ease-in-out;
       &:first-child {

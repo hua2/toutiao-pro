@@ -59,7 +59,6 @@ export default {
 }
 </script>
 <style scoped lang="less">
-/*/deep/ {*/
   .ant-modal-header {
     border-bottom: unset;
   }
@@ -74,5 +73,4 @@ export default {
     border-top: unset;
     padding-bottom: 24px;
   }
-/*}*/
 </style>
