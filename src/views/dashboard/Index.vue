@@ -216,7 +216,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  @import "./Workplace.less";
+  @import "./Index.less";
 
   .project-list {
 

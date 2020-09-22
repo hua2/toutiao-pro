@@ -10,7 +10,7 @@
   >
     <template v-slot:menuHeaderRender>
       <div>
-        <logo-svg />
+        <img src="../assets/logo.png">
         <h1>{{ title }}</h1>
       </div>
     </template>
@@ -38,14 +38,12 @@ import {
 import defaultSettings from '@/config/defaultSettings'
 import RightContent from '@/components/GlobalHeader/RightContent'
 import GlobalFooter from '@/components/GlobalFooter'
-import LogoSvg from '../assets/logo.svg?inline'
 import { constantRouterMap } from '@/router'
 export default {
   name: 'BasicLayout',
   components: {
     RightContent,
-    GlobalFooter,
-    LogoSvg
+    GlobalFooter
   },
   data() {
     return {

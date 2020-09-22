@@ -1,16 +1,15 @@
 import request from '@/utils/request'
 
 const userApi = {
-  Login: '/auth/login',
-  Logout: '/auth/logout',
-  ForgePassword: '/auth/forge-password',
-  Register: '/auth/register',
-  twoStepCode: '/auth/2step-code',
-  SendSms: '/account/sms',
-  SendSmsErr: '/account/sms_err',
+  Login: '/api/auth/login',
+  Logout: '/api/auth/logout',
+  ForgePassword: '/api/auth/forge-password',
+  Register: '/api/auth/register',
+  SendSms: '/api/account/sms',
+  SendSmsErr: '/api/account/sms_err',
   // get my info
-  UserInfo: '/user/info',
-  UserMenu: '/user/nav'
+  UserInfo: '/api/user/info',
+  UserMenu: '/api/user/nav'
 }
 
 /**
@@ -64,17 +63,5 @@ export function logout() {
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
     }
-  })
-}
-
-/**
- * get user 2step code open?
- * @param parameter {*}
- */
-export function get2step(parameter) {
-  return request({
-    url: userApi.twoStepCode,
-    method: 'post',
-    data: parameter
   })
 }

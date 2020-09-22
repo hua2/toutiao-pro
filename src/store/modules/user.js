@@ -53,7 +53,6 @@ const user = {
             const result = response.result
             commit('SET_NAME', { name: result.name, welcome: welcome() })
             commit('SET_AVATAR', result.avatar)
-
             resolve(response)
           })
           .catch(error => {

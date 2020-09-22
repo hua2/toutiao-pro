@@ -23,7 +23,6 @@ import MultiTab from '@/components/MultiTab'
 import IconSelector from '@/components/IconSelector'
 import TagSelect from '@/components/TagSelect'
 import StandardFormRow from '@/components/StandardFormRow'
-import ArticleListContent from '@/components/ArticleListContent'
 
 import Dialog from '@/components/Dialog'
 
@@ -50,7 +49,6 @@ export {
   IconSelector,
   TagSelect,
   StandardFormRow,
-  ArticleListContent,
 
   Dialog
 }

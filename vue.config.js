@@ -22,7 +22,6 @@ const vueConfig = {
 
   chainWebpack: config => {
     config.resolve.alias.set('@$', resolve('src'))
-
     const svgRule = config.module.rule('svg')
     svgRule.uses.clear()
     svgRule
@@ -58,7 +57,8 @@ const vueConfig = {
 
   devServer: {
     // development server port 8000
-    port: 8000
+    port: 8000,
+    proxy: 'https://www.fastmock.site/mock/a0bd9f5bd79a1872a56580697c282950/toutiao'
   },
 
   // disable source map in production

@@ -119,8 +119,7 @@ export default {
           const loginParams = { ...values }
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
-            // .catch((err) => this.requestFailed(err))
-            .catch((err) => this.loginSuccess(err))
+            .catch((err) => this.requestFailed(err))
             .finally(() => {
               state.loginBtn = false
             })
@@ -141,7 +140,6 @@ export default {
       validateFields(['mobile'], { force: true }, (err, values) => {
         if (!err) {
           state.smsSendBtn = true
-
           const interval = window.setInterval(() => {
             if (state.time-- <= 0) {
               state.time = 60
@@ -149,7 +147,6 @@ export default {
               window.clearInterval(interval)
             }
           }, 1000)
-
           const hide = this.$message.loading('验证码发送中..', 0)
           getSmsCaptcha({ mobile: values.mobile })
             .then((res) => {
@@ -172,8 +169,9 @@ export default {
       })
     },
     loginSuccess(res) {
-      console.log(res)
-      this.$router.push({ path: '/' })
+      this.$router.push('/').catch((error) => {
+        console.info(error.message)
+      })
       // 延迟 1 秒显示欢迎信息
       setTimeout(() => {
         this.$notification.success({
@@ -184,6 +182,7 @@ export default {
       this.isLoginError = false
     },
     requestFailed(err) {
+      console.log(err)
       this.isLoginError = true
       this.$notification['error']({
         message: '错误',
