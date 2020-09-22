@@ -43,6 +43,7 @@ import {
   Result,
   Statistic,
   Descriptions,
+  pagination,
   message,
   notification
 } from 'ant-design-vue'
@@ -94,6 +95,7 @@ Vue.use(PageHeader)
 Vue.use(Result)
 Vue.use(Statistic)
 Vue.use(Descriptions)
+Vue.use(pagination)
 
 Vue.prototype.$confirm = Modal.confirm
 Vue.prototype.$message = message

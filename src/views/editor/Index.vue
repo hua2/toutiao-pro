@@ -1,5 +1,4 @@
 <template>
-
   <page-header-wrapper>
     <template v-slot:content>
       <WangEditor v-model="content" />
@@ -9,7 +8,6 @@
     </template>
     <div>
       <QuillEditor v-model="content" />
-
     </div>
   </page-header-wrapper>
 </template>

@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import { bxAnaalyse } from '@/core/icons'
 
 import { UserLayout, BasicLayout } from '@/layouts'
 export const RouteView = {
@@ -21,21 +20,76 @@ export const constantRouterMap = [
         name: 'dashboard',
         component: () => import('@/views/dashboard/Index'),
         meta: {
-          title: '首页',
+          title: '主页',
           keepAlive: true,
-          icon: bxAnaalyse
+          icon: 'home'
         }
       },
       // editor
+      // {
+      //   path: '/editor',
+      //   name: 'editor',
+      //   component: () => import('@/views/editor/Index'),
+      //   meta: {
+      //     title: '编辑器测试',
+      //     keepAlive: true,
+      //     icon: bxAnaalyse
+      //   }
+      // },
+      // publish
       {
-        path: '/editor',
-        name: 'editor',
-        component: () => import('@/views/editor/Index'),
-        meta: {
-          title: '编辑器测试',
-          keepAlive: true,
-          icon: bxAnaalyse
-        }
+        path: '/publish',
+        name: 'publish',
+        component: RouteView,
+        redirect: '/publish/index',
+        meta: { title: '创作', icon: 'edit' },
+        children: [
+          {
+            path: '/publish',
+            name: 'publish',
+            component: () =>
+              import(/* webpackChunkName: "fail" */ '@/views/publish/Index'),
+            meta: { title: '发布文章' }
+          },
+          {
+            path: '/publish/video',
+            name: 'video',
+            component: () =>
+              import(/* webpackChunkName: "fail" */ '@/views/publish/Video'),
+            meta: { title: '发布视频' }
+          },
+          {
+            path: '/publish/question',
+            name: 'question',
+            component: () =>
+              import(/* webpackChunkName: "fail" */ '@/views/publish/Question'),
+            meta: { title: '发布问答' }
+          }
+        ]
+      },
+      // works
+      {
+        path: '/manage',
+        name: 'manage',
+        component: RouteView,
+        redirect: '/manage/works/index',
+        meta: { title: '作品管理', icon: 'project' },
+        children: [
+          {
+            path: '/manage/works/index',
+            name: 'manage/works/index',
+            component: () =>
+              import(/* webpackChunkName: "fail" */ '@/views/manage/works/Index'),
+            meta: { title: '作品管理' }
+          },
+          {
+            path: '/manage/comment/index',
+            name: 'manage/comment/index',
+            component: () =>
+              import(/* webpackChunkName: "fail" */ '@/views/manage/comment/Index'),
+            meta: { title: '评论管理' }
+          }
+        ]
       },
       // Exception
       {
@@ -67,6 +121,17 @@ export const constantRouterMap = [
             meta: { title: '500' }
           }
         ]
+      },
+      // setting
+      {
+        path: '/setting',
+        name: 'setting',
+        component: () => import('@/views/setting/Index'),
+        meta: {
+          title: '设置',
+          keepAlive: true,
+          icon: 'setting'
+        }
       }
     ]
   }
@@ -104,7 +169,7 @@ const defalutRouterMap = [
     ]
   },
   {
-    path: '/404',
+    path: '/setting',
     component: () =>
       import(/* webpackChunkName: "fail" */ '@/views/exception/404')
   },
