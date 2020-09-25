@@ -3,16 +3,17 @@
     <div class="graphic-left">
       <a-input-search
         placeholder="搜索作品标题"
-        style="width: 312px"
+        style="max-width: 312px"
         @search="onSearch"
       />
       <div class="graphic-list flex mt-8">
-        <img
-          src="https://p6-tt-ipv6.byteimg.com/large/pgc-image/8f10eb28d01d412c9082fd4e1ade307b"
-          alt=""
-        />
+        <a href="#">
+          <img
+            src="https://p6-tt-ipv6.byteimg.com/large/pgc-image/8f10eb28d01d412c9082fd4e1ade307b"
+            alt=""
+          /></a>
         <div class="g-l-title ml-12">
-          <a href="#">明阳风机商业秘密疑被侵犯案引发业内质疑</a>
+          <a href="#">明阳风机商业秘密疑被侵犯案引发业内质疑明阳风机商业秘密疑被侵犯案引发业内质疑</a>
           <p>评论 0</p>
         </div>
       </div>
@@ -66,13 +67,12 @@ export default {
     width: 100%;
   }
   .graphic-left {
-    width: 33.3%;
+    width: 100%;
     padding: 0 20px;
     overflow: hidden;
     border-right: 1px solid #e2e8f0;
     .graphic-list {
       width: 100%;
-      overflow-y: auto;
       padding: 24px 32px 24px 0;
       border-bottom: 1px solid #e2e8f0;
       img {

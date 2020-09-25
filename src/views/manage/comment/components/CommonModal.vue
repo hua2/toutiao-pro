@@ -7,7 +7,7 @@
           alt=""
         />
         <strong><a href="#">贺宇峰</a></strong>
-        评论了文章
+        <span>评论了文章</span>
         <span><a href="#">垃圾垃圾；安靠 </a></span>
       </div>
       <div class="c-p-content flex flex-col mt-8">
@@ -82,9 +82,8 @@ export default {
       }
       strong,
       span {
-        color: var(--black02);
         margin: 0 8px;
-        transition: all 0.3s ease-in-out;
+        white-space:nowrap;
       }
     }
     .c-p-content {

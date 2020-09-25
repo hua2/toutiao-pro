@@ -17,14 +17,14 @@
           <p>原创</p>
         </div>
         <div class="flex justify-between mt-32">
-          <div style="min-width:365px">
+          <div>
             <span>展现 7907</span>
             <span>阅读 7907</span>
             <span>点赞 7907</span>
             <span>评论 7907</span>
             <span>展现 7907</span>
           </div>
-          <div style="min-width:268">
+          <div style="flex:1 0 auto">
             <span>查看数据</span>
             <span>查看评论</span>
             <span>编辑</span>

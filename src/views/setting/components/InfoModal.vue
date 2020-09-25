@@ -73,6 +73,8 @@ export default {
         color: #1356bd;
         border: unset;
         background: #fff;
+        min-width:56px;
+        text-align: right;
       }
     }
   }

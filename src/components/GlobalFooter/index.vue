@@ -21,3 +21,14 @@ export default {
   }
 }
 </script>
+<style scoped lang="less">
+  .ant-pro-global-footer{
+    padding: unset;
+  }
+  @media screen and (max-width: 441px){
+    .ant-pro-global-footer{
+     display: none;
+    }
+  }
+
+</style>

@@ -45,7 +45,7 @@ export const constantRouterMap = [
         meta: { title: '创作', icon: 'edit' },
         children: [
           {
-            path: '/publish',
+            path: '/publish/index',
             name: 'publish',
             component: () =>
               import(/* webpackChunkName: "fail" */ '@/views/publish/Index'),
@@ -59,10 +59,10 @@ export const constantRouterMap = [
             meta: { title: '发布视频' }
           },
           {
-            path: '/publish/question',
-            name: 'question',
+            path: '/publish/question/question',
+            name: 'question/question',
             component: () =>
-              import(/* webpackChunkName: "fail" */ '@/views/publish/Question'),
+              import(/* webpackChunkName: "fail" */ '@/views/publish/question/Index'),
             meta: { title: '发布问答' }
           }
         ]
@@ -73,7 +73,7 @@ export const constantRouterMap = [
         name: 'manage',
         component: RouteView,
         redirect: '/manage/works/index',
-        meta: { title: '作品管理', icon: 'project' },
+        meta: { title: '管理', icon: 'project' },
         children: [
           {
             path: '/manage/works/index',
@@ -131,6 +131,17 @@ export const constantRouterMap = [
           title: '设置',
           keepAlive: true,
           icon: 'setting'
+        }
+      },
+      // qa
+      {
+        path: '/publish/publishQuestion',
+        name: '/publish/publishQuestion',
+        component: () => import('@/views/publish/question/PublishQuestion'),
+        meta: {
+          title: '发布',
+          keepAlive: true,
+          icon: 'edit'
         }
       }
     ]

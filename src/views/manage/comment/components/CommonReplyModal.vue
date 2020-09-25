@@ -7,7 +7,7 @@
           alt=""
         />
         <strong><a href="#">贺宇峰</a></strong>
-        评论了文章
+        <span>评论了文章</span>
         <span><a href="#">垃圾垃圾；安靠 </a></span>
       </div>
       <div class="c-p-content flex items-center mt-8">
@@ -61,7 +61,7 @@
             alt=""
           />
           <strong><a href="#">我</a></strong>
-          回复
+          <span>回复</span>
           <span><a href="#">用户7879878</a> </span>
         </div>
         <div class="c-p-content mt-8">
@@ -135,8 +135,8 @@ export default {
 
       strong,
       span {
-        color: var(--black02);
         margin: 0 8px;
+        white-space:nowrap;
       }
     }
 

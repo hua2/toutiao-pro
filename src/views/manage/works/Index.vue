@@ -1,39 +1,38 @@
 <template>
-  <div class="works relative">
+  <div class="works">
     <a-tabs default-active-key="1" @change="callback">
       <a-tab-pane key="1" tab="全部">
         <div class="works-tab">
-          <a-tabs default-active-key="6" @change="callback">
-            <a-tab-pane key="5" tab="状态" disabled />
-            <a-tab-pane key="6" tab="全部" force-render>
-              共 136 条内容
-              <WorksModal />
-              <div class="flex justify-end mt-32">
-                <a-pagination v-model="current" :total="50" show-less-items />
-              </div>
-            </a-tab-pane>
-            <a-tab-pane key="7" tab="已发布">
-              已发布
-            </a-tab-pane>
-            <a-tab-pane key="8" tab="审核中">
-              审核中
-            </a-tab-pane>
-            <a-tab-pane key="9" tab="未通过">
-              未通过
-            </a-tab-pane>
-            <a-tab-pane key="10" tab="仅我可见">
-              仅我可见
-            </a-tab-pane>
-          </a-tabs>
+          <a-form>
+            <div class="w-t-left">
+              <a-form-item label="状态">
+                <a-select v-model="status">
+                  <a-select-option value="">全部</a-select-option>
+                  <a-select-option value="0">已发布</a-select-option>
+                  <a-select-option value="1">审核中</a-select-option>
+                  <a-select-option value="2">未通过</a-select-option>
+                  <a-select-option value="3">仅我可见</a-select-option>
+                </a-select>
+              </a-form-item>
+            </div>
+            <div class="w-t-right">
+              <a-form-item>
+                <a-range-picker format="YYYY-MM-DD" class="mr-24" @change="handleDate" />
+              </a-form-item>
+              <a-form-item>
+                <a-input-search
+                  placeholder="搜索关键词"
+                  style="width: 150px"
+                  @search="onSearch"
+                />
+              </a-form-item>
+              <a-button type="primary" icon="search" @sclick="searchQuery">查询</a-button>
+              <a-button type="primary" icon="reload" @click="searchReset">重置</a-button>
+            </div>
+          </a-form>
         </div>
-        <div class="works-data">
-          <a-range-picker @change="onChange" />
-          <a-input-search
-            placeholder="搜索关键词"
-            style="width: 140px;margin-top: 12px"
-            @search="onSearch"
-          />
-        </div>
+        共 136 条内容
+        <WorksModal />
       </a-tab-pane>
       <a-tab-pane key="2" tab="图文" force-render>
         图文
@@ -44,8 +43,13 @@
       <a-tab-pane key="4" tab="问答">
         问答
       </a-tab-pane>
-    </a-tabs>
-  </div>
+      <a-tab-pane key="5">
+        <span slot="tab">
+          <a-divider type="vertical" />草稿箱
+        </span>
+        草稿箱
+      </a-tab-pane>
+    </a-tabs></div>
 </template>
 
 <script>
@@ -55,12 +59,25 @@ export default {
   components: { WorksModal },
   data() {
     return {
-      current: 2
+      current: 2,
+      status: '',
+      beginDate: '',
+      endDate: ''
     }
   },
   methods: {
+    searchQuery(key) {
+      console.log(key)
+    },
+    searchReset(key) {
+      console.log(key)
+    },
     callback(key) {
       console.log(key)
+    },
+    handleDate(e, date) {
+      this.beginDate = date[0]
+      this.endDate = date[1]
     },
     onChange(date, dateString) {
       console.log(date, dateString)
@@ -75,25 +92,5 @@ export default {
 <style scoped lang="less">
 .works {
   width: 100%;
-  .works-tab {
-    /*/deep/ {*/
-      .ant-tabs-bar {
-        border-bottom: unset;
-      }
-      .ant-tabs {
-        min-height: 480px;
-      }
-    }
-  /*}*/
-  .works-data {
-    position: absolute;
-    right: 12px;
-    top: 58px;
-    .ant-calendar-picker {
-      width: 280px;
-      margin-top: 12px;
-      margin-right: 8px;
-    }
-  }
 }
 </style>
