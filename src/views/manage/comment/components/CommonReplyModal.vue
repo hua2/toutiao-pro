@@ -11,11 +11,11 @@
         <span><a href="#">垃圾垃圾；安靠 </a></span>
       </div>
       <div class="c-p-content flex items-center mt-8">
-        <div v-if="showTop" class="c-p-c-top mr-6 text-center">
-          置顶
-        </div>
         <p>
-          施耐德是法国的吧
+          <span v-if="showTop" class="c-p-c-top mr-6 text-center">
+            置顶
+          </span>
+          施耐德是法国的吧施耐德是法国的吧施耐德是法国的吧施耐德是法国的吧施耐德是法国的吧施耐德是法国的吧施耐德是法国的吧施耐德是法国的吧
         </p>
       </div>
       <div class="c-p-reply mt-12 flex items-center justify-between">

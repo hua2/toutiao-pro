@@ -91,13 +91,25 @@ export const constantRouterMap = [
           }
         ]
       },
+      // qa
+      {
+        path: '/publish/publishQuestion',
+        name: 'publishQuestion',
+        component: () => import('@/views/publish/question/PublishQuestion'),
+        meta: {
+          title: '发布',
+          keepAlive: true,
+          icon: 'edit',
+          hidden: true
+        }
+      },
       // Exception
       {
         path: '/exception',
         name: 'exception',
         component: RouteView,
         redirect: '/exception/403',
-        meta: { title: '异常页', icon: 'warning' },
+        meta: { title: '异常页', icon: 'warning', hidden: true },
         children: [
           {
             path: '/exception/403',
@@ -131,17 +143,6 @@ export const constantRouterMap = [
           title: '设置',
           keepAlive: true,
           icon: 'setting'
-        }
-      },
-      // qa
-      {
-        path: '/publish/publishQuestion',
-        name: '/publish/publishQuestion',
-        component: () => import('@/views/publish/question/PublishQuestion'),
-        meta: {
-          title: '发布',
-          keepAlive: true,
-          icon: 'edit'
         }
       }
     ]

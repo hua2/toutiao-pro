@@ -79,6 +79,7 @@ export default {
   created() {
     const routes = constantRouterMap.find(item => item.path === '/')
     this.menus = (routes && routes.children) || []
+    this.menus = this.menus.filter(m => !m.meta.hidden)
     // 处理侧栏收起状态
     this.$watch('collapsed', () => {
       this.$store.commit(SIDEBAR_TYPE, this.collapsed)

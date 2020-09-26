@@ -8,11 +8,11 @@
             <div class="mr-24">回答 {{ num }}</div>
             <div>收藏 {{ number }}</div>
           </div>
-          <div v-if="show" class="flex">
-            <span class="q-m-btn text-red-500 mr-24" @click="$router.push('/publish/publishQuestion')">
+          <div class="flex">
+            <div v-if="show" class="q-m-btn text-red-500 mr-24" @click="$router.push('/publish/publishQuestion')">
               <a-icon type="edit" />
               写回答
-            </span>
+            </div>
             <div class="q-m-btn" @click="collectClick">
               <a-icon type="star" />
               {{ showCollect ? "取消收藏" : "收藏问题" }}
@@ -21,8 +21,7 @@
         </div>
       </div>
     </div>
-  </div>
-</template>
+  </div></template>
 
 <script>
 export default {

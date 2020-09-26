@@ -5,7 +5,7 @@
         <QuillEditor v-model="content" />
       </template>
     </page-header-wrapper>
-    <QuestionModal />
+    <QuestionModal title="123" num="1234565" number="321" :show="false" />
     <a-form>
       <a-form-item label="声明原创" :label-col="{ span: 3 }" :wrapper-col="{ span: 12 }">
         <a-checkbox @change="onChange">
