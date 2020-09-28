@@ -1,87 +1,88 @@
 <template>
   <div class="publish-video">
-    <page-header-wrapper />
-    <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
-      <a-form-item label="上传" required>
-        <a-upload
-          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-          :transform-file="transformFile"
-        >
-          <a-button> <a-icon type="upload" /> Upload </a-button>
-        </a-upload>
-      </a-form-item>
-      <a-form-item label="标题" required>
-        <a-textarea
-          v-model="userName"
-          maxlength="30"
-          :rows="1"
-          @input="descInput"
-        ></a-textarea>
-        <span class="p-v-title">{{ remnant }}/30</span>
-      </a-form-item>
-      <a-form-item label="封面" required>
-        <template #help>
-          <h4>清晰美观的封面有利于推荐，建议分辨率不低于 1920*1080（大小不超过 20M）建议的封面</h4>
-        </template>
-        <a-upload
-          name="videoUrl"
-          accept="video/mp3"
-          list-type="picture-card"
-          class="avatar-uploader"
-          :show-upload-list="false"
-          :before-upload="beforeUpload"
-          :custom-request="handleUpload"
-        >
-          <img v-if="urls.secondImg" :src="urls.secondImg" alt="avatar" />
-          <div v-else>
-            <a-icon :type="loading ? 'loading' : 'plus'" />
-          </div>
-        </a-upload>
-      </a-form-item>
-      <a-form-item label="视频简介">
-        <a-textarea
-          v-model="videoInfo"
-          maxlength="400"
-          :rows="1"
-          @input="descVideoInput"
-        ></a-textarea>
-        <span class="p-v-title">{{ videoRemnant }}/400</span>
-      </a-form-item>
-      <a-form-item label="创作类型：" required>
-        <a-radio-group v-decorator="['', { rules: [{ required: true }], initialValue: '0' }]" name="">
-          <a-radio value="0">原创</a-radio>
-          <a-radio value="1">转载</a-radio>
-        </a-radio-group>
-      </a-form-item>
-      <a-form-item label="创作收益：">
-        发布原创视频可获得收益，非原创内容勾选原创将受到处罚，详见 <a href="#">查看详情</a>
-      </a-form-item>
-      <a-form-item label="水印设置：" help="视频中增加带有你昵称的水印查看预览">
-        <a-checkbox @change="onChange">
-          开启专属水印
-        </a-checkbox>
-      </a-form-item>
-      <a-form-item label="视频标签：">
-        <a-input />
-      </a-form-item>
-      <a-form-item label="扩展链接：" help="视频中增加带有你昵称的水印查看预览">
-        <a-checkbox @change="onChange">
-          在角马能源APP的固定位置插入连接 了解扩展链接
-        </a-checkbox>
-      </a-form-item>
-    </a-form>
-    <div class="mt-32 ml-64">
-      <a-button
-        @click="saveInfo"
-      >存草稿</a-button>
-      <a-button
-        @click="saveInfo"
-      >定时发布</a-button>
-      <a-button
-        type="primary"
-        @click="saveInfo"
-      >发布</a-button>
-    </div>
+    <page-header-wrapper :title="false">
+      <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
+        <a-form-item label="上传" required>
+          <a-upload
+            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+            :transform-file="transformFile"
+          >
+            <a-button> <a-icon type="upload" /> Upload </a-button>
+          </a-upload>
+        </a-form-item>
+        <a-form-item label="标题" required>
+          <a-textarea
+            v-model="userName"
+            maxlength="30"
+            :rows="1"
+            @input="descInput"
+          ></a-textarea>
+          <span class="p-v-title">{{ remnant }}/30</span>
+        </a-form-item>
+        <a-form-item label="封面" required>
+          <template #help>
+            清晰美观的封面有利于推荐，建议分辨率不低于 1920*1080（大小不超过 20M）
+          </template>
+          <a-upload
+            name="videoUrl"
+            accept="video/mp3"
+            list-type="picture-card"
+            class="avatar-uploader"
+            :show-upload-list="false"
+            :before-upload="beforeUpload"
+            :custom-request="handleUpload"
+          >
+            <img v-if="urls.secondImg" :src="urls.secondImg" alt="avatar" />
+            <div v-else>
+              <a-icon :type="loading ? 'loading' : 'plus'" />
+            </div>
+          </a-upload>
+        </a-form-item>
+        <a-form-item label="视频简介">
+          <a-textarea
+            v-model="videoInfo"
+            maxlength="400"
+            :rows="1"
+            @input="descVideoInput"
+          ></a-textarea>
+          <span class="p-v-title">{{ videoRemnant }}/400</span>
+        </a-form-item>
+        <a-form-item label="创作类型：" required>
+          <a-radio-group v-decorator="['', { rules: [{ required: true }], initialValue: '0' }]" name="">
+            <a-radio value="0">原创</a-radio>
+            <a-radio value="1">转载</a-radio>
+          </a-radio-group>
+        </a-form-item>
+        <a-form-item label="创作收益：">
+          发布原创视频可获得收益，非原创内容勾选原创将受到处罚，详见 <a href="#">查看详情</a>
+        </a-form-item>
+        <a-form-item label="水印设置：" help="视频中增加带有你昵称的水印查看预览">
+          <a-checkbox @change="onChange">
+            开启专属水印
+          </a-checkbox>
+        </a-form-item>
+        <a-form-item label="视频标签：">
+          <a-input />
+        </a-form-item>
+        <a-form-item label="扩展链接：" help="视频中增加带有你昵称的水印查看预览">
+          <a-checkbox @change="onChange">
+            在角马能源APP的固定位置插入连接
+          </a-checkbox>
+        </a-form-item>
+      </a-form>
+      <div class="flex justify-center">
+        <a-button
+          @click="saveInfo"
+        >存草稿</a-button>
+        <a-button
+          @click="saveInfo"
+        >定时发布</a-button>
+        <a-button
+          type="primary"
+          @click="saveInfo"
+        >发布</a-button>
+      </div>
+    </page-header-wrapper>
   </div>
 
 </template>

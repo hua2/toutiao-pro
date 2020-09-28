@@ -92,5 +92,36 @@ export default {
 <style scoped lang="less">
 .works {
   width: 100%;
+  .works-tab{
+    /deep/ .ant-form{
+        display: flex;
+        .w-t-left{
+          .ant-form-item-label{
+            width: 48px;
+            text-align: left;
+          }
+          .ant-form-item{
+            display: flex;
+            align-items: center;
+          }
+          .ant-select{
+            max-width: 135px;
+          }
+        }
+        .w-t-right{
+          display: flex;
+          flex-grow: 1;
+          justify-content: flex-end;
+          .ant-col{
+            max-width: 240px;
+            margin-left: 24px;
+          }
+          button{
+            margin-left: 16px;
+            margin-top: 4px;
+          }
+        }
+      }
+  }
 }
 </style>

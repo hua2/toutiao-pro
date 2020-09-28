@@ -13,7 +13,7 @@
       <a-textarea
         v-model="userInfo"
         maxlength="30"
-        :rows="2"
+        :rows="1"
         @input="descInput"
       ></a-textarea>
       <span>{{ remnant }}/30</span>
@@ -49,32 +49,20 @@ export default {
       setTimeout(() => {
         this.visible = false
         this.confirmLoading = false
+        this.handleClear()
       }, 2000)
+    },
+    handleClear() {
+      this.userInfo = ''
+      this.remnant = 0
     },
     handleCancel(e) {
       console.log('Clicked cancel button', e)
       this.visible = false
+      this.handleClear()
     }
   }
 }
 </script>
 <style scoped lang="less">
-
-      .ant-modal-header {
-        border-bottom: unset;
-      }
-
-      .ant-modal-body {
-        span {
-          position: absolute;
-          right: 32px;
-          margin-top: 28px;
-        }
-      }
-
-      .ant-modal-footer {
-        border-top: unset;
-        padding-bottom: 24px;
-      }
-
 </style>

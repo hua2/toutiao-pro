@@ -53,35 +53,22 @@
 .ant-tabs-bar{
   border-bottom: unset;
 }
+//modal
 
-.works-tab{
-  .ant-form{
-    display: flex;
-    .w-t-left{
-      .ant-form-item-label{
-        width: 48px;
-        text-align: left;
-      }
-      .ant-form-item{
-        display: flex;
-        align-items: center;
-      }
-      .ant-select{
-        max-width: 135px;
-      }
-    }
-    .w-t-right{
-      display: flex;
-      flex-grow: 1;
-      justify-content: flex-end;
-      .ant-col{
-        max-width: 240px;
-        margin-left: 24px;
-      }
-      button{
-        margin-left: 16px;
-        margin-top: 4px;
-      }
-    }
+.ant-modal-header {
+  border-bottom: unset;
+}
+.ant-modal-body {
+  textarea.ant-input{
+    padding-right: 36px;
   }
+  span {
+    position: absolute;
+    right: 32px;
+    margin: 6px;
+  }
+}
+.ant-modal-footer {
+  border-top: unset;
+  padding-bottom: 24px;
 }

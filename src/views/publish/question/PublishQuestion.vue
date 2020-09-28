@@ -1,19 +1,20 @@
 <template>
   <div class="publish-question">
-    <page-header-wrapper>
+    <page-header-wrapper :title="false">
       <template v-slot:content>
-        <QuillEditor v-model="content" />
+        <QuillEditor v-model="content" class="p-q-editor" />
       </template>
+      <QuestionModal title="尿酸升高了，手脚有什么症状？如何清除呢？" num="24" number="321" :show="false" />
+      <div class="flex justify-between items-center mt-24">
+        <div>
+          <span class="mr-24">声明原创</span>
+          <a-checkbox @change="onChange">
+            声明原创
+          </a-checkbox>
+        </div>
+        <a-button type="primary">发布</a-button>
+      </div>
     </page-header-wrapper>
-    <QuestionModal title="123" num="1234565" number="321" :show="false" />
-    <a-form>
-      <a-form-item label="声明原创" :label-col="{ span: 3 }" :wrapper-col="{ span: 12 }">
-        <a-checkbox @change="onChange">
-          声明原创
-        </a-checkbox>
-      </a-form-item>
-    </a-form>
-    <a-button>发布</a-button>
   </div>
 </template>
 
@@ -39,6 +40,12 @@ export default {
 <style scoped lang="less">
   .publish-question{
     width: 100%;
+    .p-q-editor {
+      width: 100%;
+      /deep/ .ql-container.ql-snow {
+        min-height: 320px;
+      }
+    }
   }
 
 </style>
