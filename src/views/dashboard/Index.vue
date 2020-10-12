@@ -3,11 +3,11 @@
     <template v-slot:content>
       <div class="page-header-content">
         <div class="avatar">
-          <a-avatar size="large" :src="currentUser.avatar" />
+          <a-avatar size="large" :src="userInfo.avatar" />
         </div>
         <div class="content">
           <div class="content-title">
-            {{ timeFix }}，{{ user.name }}<span class="welcome-text">，{{ welcome }}</span>
+            {{ timeFix }}，{{ name }}<span class="welcome-text">，{{ welcome }}</span>
           </div>
           <div>角马能源 | 让“能源“更高效</div>
         </div>
@@ -143,7 +143,6 @@ export default {
       timeFix: timeFix(),
       avatar: '',
       user: {},
-
       projects: [],
       loading: true,
       radarLoading: true,
@@ -191,15 +190,9 @@ export default {
   },
   computed: {
     ...mapState({
-      nickname: (state) => state.user.nickname,
-      welcome: (state) => state.user.welcome
+      welcome: (state) => state.user.welcome,
+      name: (state) => state.user.name
     }),
-    currentUser() {
-      return {
-        name: 'Serati Ma',
-        avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png'
-      }
-    },
     userInfo() {
       return this.$store.getters.userInfo
     }

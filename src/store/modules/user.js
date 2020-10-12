@@ -1,6 +1,6 @@
 import storage from 'store'
-import { login, getInfo, logout } from '@/api/login'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
+import api from '@/api'
+import { ACCESS_TOKEN, USER_ID } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
 
 const user = {
@@ -9,12 +9,16 @@ const user = {
     name: '',
     welcome: '',
     avatar: '',
-    info: {}
+    userId: '',
+    info: null
   },
 
   mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token
+    },
+    SET_ID: (state, userId) => {
+      state.userId = userId
     },
     SET_NAME: (state, { name, welcome }) => {
       state.name = name
@@ -32,11 +36,16 @@ const user = {
     // 登录
     Login({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
-        login(userInfo)
+        api.user.login(userInfo)
           .then(response => {
-            const result = response.result
+            const result = response.data
             storage.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
             commit('SET_TOKEN', result.token)
+            storage.set(USER_ID, result.id, 7 * 24 * 60 * 60 * 1000)
+            commit('SET_ID', result.id)
+            commit('SET_NAME', { name: result.nickName || result.mobile, welcome: welcome() })
+            commit('SET_AVATAR', result.headPicUrl)
+            commit('SET_INFO', result)
             resolve()
           })
           .catch(error => {
@@ -48,11 +57,12 @@ const user = {
     // 获取用户信息
     GetInfo({ commit }) {
       return new Promise((resolve, reject) => {
-        getInfo()
+        api.user.personInfo()
           .then(response => {
-            const result = response.result
-            commit('SET_NAME', { name: result.name, welcome: welcome() })
-            commit('SET_AVATAR', result.avatar)
+            const result = response.data
+            commit('SET_NAME', { name: result.nickName || result.mobile, welcome: welcome() })
+            commit('SET_AVATAR', result.headPicUrl)
+            commit('SET_INFO', result)
             resolve(response)
           })
           .catch(error => {
@@ -64,17 +74,9 @@ const user = {
     // 登出
     Logout({ commit, state }) {
       return new Promise(resolve => {
-        logout(state.token)
-          .then(() => {
-            resolve()
-          })
-          .catch(() => {
-            resolve()
-          })
-          .finally(() => {
-            commit('SET_TOKEN', '')
-            storage.remove(ACCESS_TOKEN)
-          })
+        commit('SET_TOKEN', '')
+        storage.remove(ACCESS_TOKEN)
+        resolve()
       })
     }
   }

@@ -2,7 +2,7 @@
   <div :class="wrpCls">
     <avatar-dropdown
       :menu="showMenu"
-      :current-user="currentUser"
+      :current-user="userInfo"
       :class="prefixCls"
     />
   </div>
@@ -41,19 +41,15 @@ export default {
     }
   },
   computed: {
+    userInfo() {
+      return this.$store.getters.userInfo
+    },
     wrpCls() {
       return {
         'ant-pro-global-header-index-right': true,
         [`ant-pro-global-header-index-${this.isMobile || !this.topMenu ? 'light' : this.theme}`]: true
       }
     }
-  },
-  mounted() {
-    setTimeout(() => {
-      this.currentUser = {
-        name: 'Serati Ma'
-      }
-    }, 1500)
   }
 }
 </script>

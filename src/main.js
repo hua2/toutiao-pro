@@ -6,8 +6,9 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store/'
-import { VueAxios } from './utils/request'
+
 import ProLayout, { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
+import api from './api' // 导入api接口
 
 import bootstrap from './core/bootstrap'
 import './core/lazy_use' // use lazy load components
@@ -18,8 +19,10 @@ import './assets/style/utilities.css' // global style
 
 Vue.config.productionTip = false
 
+Vue.prototype.$api = api // 将api挂载到vue的原型上
+
 // mount axios to `Vue.$http` and `this.$http`
-Vue.use(VueAxios)
+
 // use pro-layout components
 Vue.component('pro-layout', ProLayout)
 Vue.component('page-container', PageHeaderWrapper)

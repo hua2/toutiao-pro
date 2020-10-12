@@ -25,17 +25,6 @@ export const constantRouterMap = [
           icon: 'home'
         }
       },
-      // editor
-      // {
-      //   path: '/editor',
-      //   name: 'editor',
-      //   component: () => import('@/views/editor/Index'),
-      //   meta: {
-      //     title: '编辑器测试',
-      //     keepAlive: true,
-      //     icon: bxAnaalyse
-      //   }
-      // },
       // publish
       {
         path: '/publish',
@@ -46,23 +35,23 @@ export const constantRouterMap = [
         children: [
           {
             path: '/publish/index',
-            name: 'publish',
+            name: 'publishIndex',
             component: () =>
-              import(/* webpackChunkName: "fail" */ '@/views/publish/Index'),
+              import(/* webpackChunkName: "publishIndex" */ '@/views/publish/Index'),
             meta: { title: '发布文章' }
           },
           {
             path: '/publish/video',
-            name: 'video',
+            name: 'publishVideo',
             component: () =>
-              import(/* webpackChunkName: "fail" */ '@/views/publish/Video'),
+              import(/* webpackChunkName: "publishVideo" */ '@/views/publish/Video'),
             meta: { title: '发布视频' }
           },
           {
-            path: '/publish/question/question',
-            name: 'question/question',
+            path: '/publish/question',
+            name: 'publishQuestion',
             component: () =>
-              import(/* webpackChunkName: "fail" */ '@/views/publish/question/Index'),
+              import(/* webpackChunkName: "publishQuestion" */ '@/views/publish/question/Index'),
             meta: { title: '发布问答' }
           }
         ]
@@ -77,16 +66,16 @@ export const constantRouterMap = [
         children: [
           {
             path: '/manage/works/index',
-            name: 'manage/works/index',
+            name: 'manageWorks',
             component: () =>
-              import(/* webpackChunkName: "fail" */ '@/views/manage/works/Index'),
+              import(/* webpackChunkName: "manageWork" */ '@/views/manage/works/Index'),
             meta: { title: '作品管理' }
           },
           {
             path: '/manage/comment/index',
-            name: 'manage/comment/index',
+            name: 'manageComment',
             component: () =>
-              import(/* webpackChunkName: "fail" */ '@/views/manage/comment/Index'),
+              import(/* webpackChunkName: "manageComment" */ '@/views/manage/comment/Index'),
             meta: { title: '评论管理' }
           }
         ]
@@ -94,7 +83,7 @@ export const constantRouterMap = [
       // qa
       {
         path: '/publish/publishQuestion',
-        name: 'publishQuestion',
+        name: 'publishPublishQuestion',
         component: () => import('@/views/publish/question/PublishQuestion'),
         meta: {
           title: '发布',
@@ -184,11 +173,6 @@ const defalutRouterMap = [
     path: '/setting',
     component: () =>
       import(/* webpackChunkName: "fail" */ '@/views/exception/404')
-  },
-  {
-    path: '*',
-    redirect: '/404',
-    hidden: true
   }
 ]
 Vue.use(Router)

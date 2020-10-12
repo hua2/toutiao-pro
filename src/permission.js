@@ -24,7 +24,7 @@ router.beforeEach((to, from, next) => {
       next({ path: defaultRoutePath })
       NProgress.done()
     } else {
-      // check login user.roles is null
+      // check login user is null
       if (!store.getters.userInfo) {
         // request login userInfo
         store

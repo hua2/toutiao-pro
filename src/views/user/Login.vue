@@ -29,7 +29,7 @@
         >
           <a-form-item>
             <a-input
-              v-decorator="['captcha', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]"
+              v-decorator="['identifyCode', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]"
               size="large"
               type="text"
               placeholder="验证码"
@@ -70,13 +70,6 @@
           :disabled="state.loginBtn"
         >确定</a-button>
       </a-form-item>
-
-      <div class="user-login-other">
-        <router-link
-          class="register"
-          :to="{ name: 'register' }"
-        >注册账户</router-link>
-      </div>
     </a-form>
   </div>
 </template>
@@ -84,7 +77,6 @@
 <script>
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
-import { getSmsCaptcha } from '@/api/login'
 
 export default {
   data() {
@@ -96,7 +88,8 @@ export default {
         time: 60,
         loginBtn: false,
         smsSendBtn: false
-      }
+      },
+      source: 'pckey'
     }
   },
   methods: {
@@ -108,16 +101,18 @@ export default {
         state,
         Login
       } = this
-
       state.loginBtn = true
 
-      const validateFieldsKey = ['mobile', 'captcha']
+      const validateFieldsKey = ['mobile', 'identifyCode']
 
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
           console.log('login form', values)
           const loginParams = { ...values }
-          Login(loginParams)
+          Login({
+            ...loginParams,
+            source: this.source
+          })
             .then((res) => this.loginSuccess(res))
             .catch((err) => this.requestFailed(err))
             .finally(() => {
@@ -148,15 +143,9 @@ export default {
             }
           }, 1000)
           const hide = this.$message.loading('验证码发送中..', 0)
-          getSmsCaptcha({ mobile: values.mobile })
+          this.$api.user.getMobileCode(values.mobile)
             .then((res) => {
               setTimeout(hide, 2500)
-              this.$notification['success']({
-                message: '提示',
-                description:
-                  '验证码获取成功，您的验证码为：' + res.result.captcha,
-                duration: 8
-              })
             })
             .catch((err) => {
               setTimeout(hide, 1)

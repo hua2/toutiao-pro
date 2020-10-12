@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 const userApi = {
-  Login: '/api/auth/login',
+  Login: '/jm-user-service/IdentifyCode/getMobileIndentifyCode',
   Logout: '/api/auth/logout',
   ForgePassword: '/api/auth/forge-password',
   Register: '/api/auth/register',
@@ -33,7 +33,7 @@ export function login(parameter) {
 
 export function getSmsCaptcha(parameter) {
   return request({
-    url: userApi.SendSms,
+    url: userApi.Login,
     method: 'post',
     data: parameter
   })
