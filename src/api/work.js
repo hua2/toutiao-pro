@@ -12,6 +12,12 @@ const work = {
     return axios.post(
       `/jm-information-service/JmMedia/findPersonalPage`, data
     )
+  },
+  // 作品管理-详情
+  findOne(data) {
+    return axios.post(
+      `/jm-information-service/JmMedia/findOne`, data
+    )
   }
 }
 

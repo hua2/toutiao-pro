@@ -39,8 +39,6 @@ const user = {
         api.user.login(userInfo)
           .then(response => {
             const result = response.data
-            console.log(result.token)
-            console.log(result.id)
             storage.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
             commit('SET_TOKEN', result.token)
             storage.set(USER_ID, result.id, 7 * 24 * 60 * 60 * 1000)
