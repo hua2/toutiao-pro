@@ -2,6 +2,7 @@ import store from '@/store'
 import storage from 'store'
 import {
   ACCESS_TOKEN,
+  USER_ID,
   TOGGLE_CONTENT_WIDTH,
   TOGGLE_FIXED_HEADER,
   TOGGLE_FIXED_SIDEBAR,
@@ -44,5 +45,6 @@ export default function Initializer() {
     storage.get(TOGGLE_MULTI_TAB, defaultSettings.multiTab)
   )
   store.commit('SET_TOKEN', storage.get(ACCESS_TOKEN))
+  store.commit('SET_ID', storage.get(USER_ID))
   // last step
 }

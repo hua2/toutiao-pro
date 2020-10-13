@@ -39,6 +39,8 @@ const user = {
         api.user.login(userInfo)
           .then(response => {
             const result = response.data
+            console.log(result.token)
+            console.log(result.id)
             storage.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
             commit('SET_TOKEN', result.token)
             storage.set(USER_ID, result.id, 7 * 24 * 60 * 60 * 1000)
@@ -55,9 +57,10 @@ const user = {
     },
 
     // 获取用户信息
-    GetInfo({ commit }) {
+    GetInfo({ commit, state }) {
+      const id = state.userId || storage.get(USER_ID)
       return new Promise((resolve, reject) => {
-        api.user.personInfo()
+        api.user.personInfo(id)
           .then(response => {
             const result = response.data
             commit('SET_NAME', { name: result.nickName || result.mobile, welcome: welcome() })

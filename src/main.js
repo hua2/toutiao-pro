@@ -21,8 +21,6 @@ Vue.config.productionTip = false
 
 Vue.prototype.$api = api // 将api挂载到vue的原型上
 
-// mount axios to `Vue.$http` and `this.$http`
-
 // use pro-layout components
 Vue.component('pro-layout', ProLayout)
 Vue.component('page-container', PageHeaderWrapper)

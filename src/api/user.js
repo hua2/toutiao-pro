@@ -1,12 +1,10 @@
 /**
- * user模块接口列表
+ * log模块接口列表
  * @author lyh
  * @date 2020-10-12
  */
 
 import axios from '@/utils/request'
-import store from '@/store'
-
 const user = {
   // 登录-获取验证码
   getMobileCode(data) {
@@ -25,13 +23,13 @@ const user = {
     return axios.post(`/jm-user-service/JmAppUser/login`, data)
   },
   // 获取个人信息
-  personInfo() {
+  personInfo(id) {
     return axios.post(
       `/jm-user-service/JmAppUserCenter/findOne`,
       {},
       {
         params: {
-          id: store.state.user.userId
+          id
         }
       }
     )

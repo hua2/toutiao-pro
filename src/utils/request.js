@@ -66,7 +66,7 @@ request.interceptors.response.use(response => {
       }, 1500)
     })
   }
-  if (data && data.status === 'FAIL') {
+  if (data && data.status !== 'SUCCESS') {
     notification.error({
       message: '错误',
       description: data.msg
