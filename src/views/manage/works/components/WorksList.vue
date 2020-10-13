@@ -41,7 +41,7 @@
       :data-source="data"
     >
       <div
-        v-if="showLoadingMore"
+        v-if="showLoadingMore && data.length !== 0"
         slot="loadMore"
         :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
       >
@@ -61,14 +61,19 @@
           :src="re.videoUrl"
           :poster="re.videoUrl + '?x-oss-process=video/snapshot,t_0000,f_jpg'"
         />
-        <a href="#"  v-else>
+        <a v-else href="#">
           <img
             :src="re.firstImg"
             alt=""
           /></a>
         <div class="w-full">
           <div class="flex justify-between items-center">
-            <h3><a href="#">{{ re.title }}</a></h3>
+            <h3>
+              <span v-if="re.onlyStick === '1'">
+                置顶
+              </span>
+              <a href="#">{{ re.title }}</a>
+            </h3>
             <p>{{ formatTime(re.releaseDate) }}</p>
           </div>
           <div class="w-m-sign flex">
@@ -95,10 +100,19 @@
                       <a href="javascript:;">分享</a>
                     </a-menu-item>
                     <a-menu-item key="2">
-                      <a href="javascript:;">置顶</a>
+                      <a-popconfirm
+                        title="只能置顶一篇文章"
+                        ok-text="确定"
+                        cancel-text="取消"
+                        @confirm="stickWorkClick('1',re.id)"
+                      >
+                        <a href="#">
+                             {{ re.onlyStick==='0' ? "取消置顶" : "置顶" }}
+                        </a>
+                      </a-popconfirm>
                     </a-menu-item>
                     <a-menu-item key="3">
-                      <a href="javascript:;">设为仅我可见</a>
+                      <a href="javascript:;" @click="onlyMeClick('1',re.id)">设为仅我可见</a>
                     </a-menu-item>
                     <a-menu-item key="4">
                       <a href="javascript:;">关闭评论</a>
@@ -125,12 +139,10 @@ export default {
   name: 'WorksList',
   props: {
     type: {
-      required: true,
       type: String,
       default: ''
     },
     state: {
-      required: true,
       type: String,
       default: ''
     }
@@ -149,23 +161,47 @@ export default {
       only: 1
     }
   },
-  mounted() {
-    this.loadData(res => {
-      this.loading = false
-      this.data = res.data.data
-    })
-  },
+  // mounted() {
+  //   this.loadData(res => {
+  //     this.loading = false
+  //     this.data = res.data.data
+  //   })
+  // },
   created() {
     this.loadData()
   },
   methods: {
-    onSearch(value) {
+    onlyMeClick(num, value) {
       console.log(value)
+      this.$api.work.onlyMe({
+        id: value,
+        userId: store.state.user.userId,
+        isOnly: num
+      }).then(res => {
+        if (res.status === 'SUCCESS') {
+          console.log(res)
+          this.loadData()
+        }
+      })
+    },
+    stickWorkClick(num, value) {
+      console.log(value)
+      this.$api.work.stickWork({
+        id: value,
+        userId: store.state.user.userId,
+        isStick: num
+      }).then(res => {
+        if (res.status === 'SUCCESS') {
+          console.log(res)
+          this.loadData()
+        }
+      })
+    },
+    onSearch(value) {
       this.loadData(value)
       this.keywords = ''
     },
-    searchQuery(e) {
-      console.log(e)
+    searchQuery() {
       this.loadData()
     },
     searchReset() {
@@ -201,6 +237,7 @@ export default {
       this.loadData(res => {
         this.data = this.data.concat(res.data.data)
         this.loadingMore = false
+        this.$forceUpdate()
         this.$nextTick(() => {
           window.dispatchEvent(new Event('resize'))
         })
@@ -293,6 +330,13 @@ export default {
       font-weight: 600;
       color: #222;
       margin-bottom: 12px;
+      span{
+        width: 38px;
+        color: #fff;
+        font-size: 14px;
+        border-radius: 2px;
+        background-color: #ff5e5e;
+      }
     }
     span {
       cursor: pointer;

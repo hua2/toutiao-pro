@@ -18,6 +18,18 @@ const work = {
     return axios.post(
       `/jm-information-service/JmMedia/findOne`, data
     )
+  },
+  // 仅我可见
+  onlyMe(data) {
+    return axios.post(
+      `/jm-information-service/JmMedia/only`, data
+    )
+  },
+  // 置顶
+  stickWork(data) {
+    return axios.post(
+      `/jm-information-service/JmMedia/stick`, data
+    )
   }
 }
 

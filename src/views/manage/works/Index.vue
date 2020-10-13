@@ -18,7 +18,7 @@
         <span slot="tab">
           <a-divider type="vertical" />草稿箱
         </span>
-        <WorksList state="0"  />
+        <WorksList type="" state="0" />
       </a-tab-pane>
     </a-tabs></div>
 </template>
