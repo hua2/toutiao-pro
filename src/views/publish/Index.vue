@@ -1,72 +1,97 @@
 <template>
   <div class="publish">
     <page-header-wrapper :title="false">
-      <!--      <template v-slot:extraContent>-->
-      <!--        <a-button @click="openDialog">Dialog Test</a-button>-->
-      <!--      </template>-->
       <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
-        <a-form-item label="展示封面：" required>
-          <a-radio-group v-decorator="['', { initialValue: '0' }]">
+        <a-form-item label="标题" required>
+          <a-input
+            v-model="title"
+          ></a-input>
+        </a-form-item>
+        <a-form-item label="板式：" :required="true">
+          <a-radio-group v-decorator="['format', { initialValue: '0' }]" name="form.format">
             <a-radio value="0">单图</a-radio>
             <a-radio value="1">三图</a-radio>
-            <a-radio value="3">无封面</a-radio>
+            <a-radio value="2">纯文字</a-radio>
           </a-radio-group>
         </a-form-item>
-        <a-form-item label="上传图片" help="优质的封面有利于推荐，格式支持JPEG、PNG">
-          <a-upload
-            name="videoUrl"
-            accept="video/mp3"
-            list-type="picture-card"
-            class="avatar-uploader"
-            :show-upload-list="false"
-            :before-upload="beforeUpload"
-            :custom-request="handleUpload"
-          >
-            <img v-if="urls.secondImg" :src="urls.secondImg" alt="avatar" />
-            <div v-else>
-              <a-icon :type="loading ? 'loading' : 'plus'" />
-            </div>
-          </a-upload>
-        </a-form-item>
+        <a-row style="padding-left: 130px;">
+          <a-col :span="8">
+            <a-form-item
+              label="封面："
+              :required="true"
+            >
+              <a-upload
+                name="firstImg"
+                accept="image/*"
+                list-type="picture-card"
+                class="avatar-uploader"
+                :show-upload-list="false"
+                :custom-request="handleUpload"
+                :before-upload="beforeUpload"
+              >
+                <img v-if="urls.firstImg" :src="urls.firstImg" alt="avatar" />
+                <div v-else>
+                  <a-icon :type="uploading.firstImg ? 'loading' : 'plus'" />
+                </div>
+              </a-upload>
+            </a-form-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-item label="图片：" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
+              <a-upload
+                name="secondImg"
+                accept="image/*"
+                list-type="picture-card"
+                class="avatar-uploader"
+                :show-upload-list="false"
+                :custom-request="handleUpload"
+                :before-upload="beforeUpload"
+              >
+                <img v-if="urls.secondImg" :src="urls.secondImg" alt="avatar" />
+                <div v-else>
+                  <a-icon :type="uploading.secondImg ? 'loading' : 'plus'" />
+                </div>
+              </a-upload>
+            </a-form-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-item label="图片：" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
+              <a-upload
+                name="thirdImg"
+                accept="image/*"
+                list-type="picture-card"
+                class="avatar-uploader"
+                :show-upload-list="false"
+                :custom-request="handleUpload"
+                :before-upload="beforeUpload"
+              >
+                <img v-if="urls.thirdImg" :src="urls.thirdImg" alt="avatar" />
+                <div v-else>
+                  <a-icon :type="uploading.thirdImg ? 'loading' : 'plus'" />
+                </div>
+              </a-upload>
+            </a-form-item>
+          </a-col>
+        </a-row>
+
         <a-form-item label="内容">
           <QuillEditor v-model="content" class="publish-editor" />
         </a-form-item>
-        <a-form-item label="声明原创">
+        <a-form-item label="声明原创：">
+          <a-radio-group v-decorator="['original', { rules: [{}], initialValue: '0' }]" name="original">
+            <a-radio value="0">原创</a-radio>
+            <a-radio value="1">非原创</a-radio>
+          </a-radio-group>
           <template #help>
             声明原创要求：正文字数>300（动漫/摄影领域加V认证的作者除外），且原创内容多于引用内容。抄袭、洗稿等滥用原创行为将有处罚，
             <a href="#" @click="originalClick">详见《声明原创须知》</a>
           </template>
-          <a-checkbox @change="onChange">
-            声明原创
-          </a-checkbox>
-        </a-form-item>
-        <a-form-item label="发文特权">
-          <a-checkbox-group @change="onChange">
-            <a-checkbox value="0">
-              允许赞赏（今日还有3次机会）
-            </a-checkbox>
-            <a-checkbox value="1">
-              扩展链接
-            </a-checkbox>
-          </a-checkbox-group>
-        </a-form-item>
-        <a-form-item label="投放广告：" required>
-          <a-radio-group v-decorator="['', { rules: [{ required: true }], initialValue: '0' }]" name="">
-            <a-radio value="0">投放广告赚收益</a-radio>
-            <a-radio value="1">不投放广告</a-radio>
-          </a-radio-group>
         </a-form-item>
       </a-form>
       <div class="flex justify-center">
         <a-button
-          @click="saveInfo"
         >预览</a-button>
-        <a-button
-          @click="saveInfo"
-        >存草稿</a-button>
-        <a-button
-          @click="saveInfo"
-        >定时发布</a-button>
+        <a-button>存草稿</a-button>
         <a-button
           type="primary"
           @click="saveInfo"
@@ -81,19 +106,25 @@
 <script>
 import QuillEditor from '@/components/Editor/QuillEditor'
 import ArticleModal from '@/views/publish/modules/ArticleModal'
-function getBase64(img, callback) {
-  const reader = new FileReader()
-  reader.addEventListener('load', () => callback(reader.result))
-  reader.readAsDataURL(img)
-}
 export default {
   name: 'Index',
   components: { ArticleModal, QuillEditor },
   data() {
     return {
       form: this.$form.createForm(this, { name: 'video-form' }),
+      type: 0,
+      title: '',
+      format: 0,
+      videoUrl: 0,
+      original: 0,
       content: '',
       loading: false,
+      uploading: {
+        firstImg: false,
+        secondImg: false,
+        thirdImg: false,
+        videoUrl: false
+      },
       urls: {
         firstImg: null,
         secondImg: null,
@@ -103,6 +134,13 @@ export default {
     }
   },
   methods: {
+    publishMedia() {
+      this.$api.work.publishMedia().then(res => {
+        if (res.status === 'SUCCESS') {
+          console.log(res)
+        }
+      })
+    },
     originalClick() {
       this.$refs.articleModal.showDetailModal()
     },
@@ -114,33 +152,35 @@ export default {
         }
       })
     },
-    saveInfo() {},
-    onChange(checkedValues) {
-      console.log('checked = ', checkedValues)
+    saveInfo() {
+      this.$api.work.publishMedia({
+        type: 0,
+        title: this.title,
+        firstImg: this.urls.firstImg,
+        original: this.original,
+        content: this.content
+      }).then(res => {
+        if (res.status === 'SUCCESS') {
+          console.log(res)
+        }
+      })
     },
-    handleUpload(info) {
-      if (info.file.status === 'uploading') {
-        this.loading = true
-        return
-      }
-      if (info.file.status === 'done') {
-        // Get this url from response in real world.
-        getBase64(info.file.originFileObj, imageUrl => {
-          this.urls.secondImg = imageUrl
-          this.loading = false
+    handleUpload() {
+      this.$api.work.uploadPicture()
+        .then(res => {
+          this.urls.firstImg = res.data
         })
-      }
+        .catch(error => {
+          console.log(error)
+          this.$message.error('upload error!')
+        })
     },
     beforeUpload(file) {
-      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-      if (!isJpgOrPng) {
-        this.$message.error('You can only upload JPG file!')
+      if (!file.type.startsWith('image')) {
+        this.$message.error('请上传图片')
+        return false
       }
-      const isLt3M = file.size / 1033 / 1033 < 3
-      if (!isLt3M) {
-        this.$message.error('Image must smaller than 3MB!')
-      }
-      return isJpgOrPng && isLt3M
+      return true
     },
     openDialog() {
       this.$dialog('你好')

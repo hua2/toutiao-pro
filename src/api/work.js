@@ -31,6 +31,19 @@ const work = {
       `/jm-information-service/JmMedia/stick`, data
     )
   },
+  // 发布媒体
+  publishMedia(data) {
+    return axios.post(
+      `/jm-information-service/JmMedia/publish`, data
+    )
+  },
+  // 上传图片 fileType为4
+  uploadPicture(file, type) {
+    const fd = new FormData()
+    fd.append('file', file)
+    fd.append('fileType', type)
+    return axios.post(`/jm-rfq-service/common/upload-picture`, fd)
+  },
   // 作品管理-删除草稿箱
   deleteDraftBox(data) {
     return axios.post(
