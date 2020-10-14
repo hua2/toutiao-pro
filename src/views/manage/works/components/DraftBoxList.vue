@@ -4,7 +4,7 @@
       <a-form>
         <div class="w-t-left flex">
           <a-form-item label="体裁">
-            <a-select v-model="type" @change="searchData">
+            <a-select v-model="types" @change="searchData">
               <a-select-option value="">全部</a-select-option>
               <a-select-option :value="0">图文</a-select-option>
               <a-select-option :value="1">视频</a-select-option>
@@ -60,44 +60,16 @@
                 <span>评论 {{ re.commentNum }}</span>
               </div>
               <div style="flex:1 0 auto">
-                <span>查看数据</span>
-                <span>查看评论</span>
                 <span>编辑</span>
                 <span>
-                  <a-dropdown>
-                    <a class="ant-dropdown-link" @click="e => e.preventDefault()">
-                      更多
-                    </a>
-                    <a-menu slot="overlay" @click="onClick">
-                      <a-menu-item key="1">
-                        <a href="javascript:;">分享</a>
-                      </a-menu-item>
-                      <a-menu-item key="2">
-                        <a-popconfirm
-                          title="同时仅支持一篇内容置顶，若已经你置顶其他内容，此内容将取代它作为置顶内容。"
-                          ok-text="确定"
-                          cancel-text="取消"
-                          @confirm="stickWorkClick(re.onlyStick === 1?0:1,re.id)"
-                        >
-                          <a v-if="re.onlyStick === 1" href="#">
-                            取消置顶
-                          </a>
-                          <a v-else href="#">
-                            置顶
-                          </a>
-                        </a-popconfirm>
-                      </a-menu-item>
-                      <a-menu-item key="3">
-                        <a href="javascript:;" @click="onlyMeClick('1',re.id)">设为仅我可见</a>
-                      </a-menu-item>
-                      <a-menu-item key="4">
-                        <a href="javascript:;">关闭评论</a>
-                      </a-menu-item>
-                      <a-menu-item key="5">
-                        <a href="javascript:;">删除作品</a>
-                      </a-menu-item>
-                    </a-menu>
-                  </a-dropdown>
+                  <a-popconfirm
+                    title="确定执行此操作？"
+                    ok-text="确定"
+                    cancel-text="取消"
+                    @confirm="deleteDraftBox(re.id)"
+                  >
+                    删除
+                  </a-popconfirm>
                 </span>
               </div>
             </div>
@@ -140,6 +112,7 @@ export default {
     return {
       releaseDate: [],
       status: 0,
+      types: '',
       loading: true,
       loadingMore: false,
       showLoadingMore: true,
@@ -155,28 +128,14 @@ export default {
   created() {
     this.loadData()
     this.status = this.state
+    this.types = this.type
   },
   methods: {
-    onlyMeClick(num, value) {
-      this.$api.work.onlyMe({
-        id: value,
-        userId: store.state.user.userId,
-        isOnly: num
+    deleteDraftBox(id) {
+      this.$api.work.deleteDraftBox({
+        id: id
       }).then(res => {
-        if (res.status === 'SUCCESS') {
-          console.log(res)
-          this.loadData()
-        }
-      })
-    },
-    stickWorkClick(num, value) {
-      console.log(value)
-      this.$api.work.stickWork({
-        id: value,
-        userId: store.state.user.userId,
-        isStick: num
-      }).then(res => {
-        if (res.status === 'SUCCESS') {
+        if (res.status === 'SUCCESSS') {
           console.log(res)
           this.loadData()
         }
@@ -205,7 +164,7 @@ export default {
         pageSize: this.pageSize,
         userId: store.state.user.userId,
         keywords: this.keywords,
-        type: this.type,
+        type: this.types,
         releaseDateGte: this.releaseDateGte,
         releaseDateLte: this.releaseDateLte,
         state: this.status,

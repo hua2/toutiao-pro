@@ -31,6 +31,12 @@ const work = {
       `/jm-information-service/JmMedia/stick`, data
     )
   },
+  // 作品管理-删除草稿箱
+  deleteDraftBox(data) {
+    return axios.post(
+      `/jm-information-service/JmMedia/delete`, data
+    )
+  },
   // 评论列表
   findPage(data) {
     return axios.post(
