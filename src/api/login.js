@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 const userApi = {
   Login: '/jm-user-service/IdentifyCode/getMobileIndentifyCode',
-  Logout: '/api/auth/logout',
+  // Logout: '/api/auth/logout',
   ForgePassword: '/api/auth/forge-password',
   Register: '/api/auth/register',
   SendSms: '/api/account/sms',

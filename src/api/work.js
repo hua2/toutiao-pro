@@ -30,6 +30,12 @@ const work = {
     return axios.post(
       `/jm-information-service/JmMedia/stick`, data
     )
+  },
+  // 评论列表
+  findPage(data) {
+    return axios.post(
+      `/jm-comment-service/JmMediaComment/findPage`, data
+    )
   }
 }
 

@@ -51,7 +51,6 @@ export default {
     },
     handleLogout(e) {
       Modal.confirm({
-        title: '提示',
         content: '确认退出?',
         onOk: () => {
           // return new Promise((resolve, reject) => {

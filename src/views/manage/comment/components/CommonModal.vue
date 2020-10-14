@@ -48,6 +48,7 @@
   </div></template>
 
 <script>
+import store from '@/store'
 export default {
   name: 'CommonModal',
   data() {
@@ -55,7 +56,26 @@ export default {
       showTop: false
     }
   },
+  created() {
+    this.findPage()
+  },
   methods: {
+    findPage() {
+      this.$api.work.findPage({
+        pageSize: 10,
+        pageNumber: 1,
+        uid: store.state.user.userId,
+        aid: 0,
+        replyUid: 0,
+        replyPId: 0,
+        type: 0,
+        replyId: 0
+      }).then(res => {
+        if (res.status === 'SUCCESS') {
+          console.log(res)
+        }
+      })
+    },
     onClick({ key }) {
       console.log(`Click on item ${key}`)
     },

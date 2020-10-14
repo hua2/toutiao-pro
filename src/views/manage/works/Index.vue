@@ -3,7 +3,7 @@
     <a-tabs default-active-key="1" @change="callback">
       <a-tab-pane key="1" tab="全部">
         共 136 条内容
-        <WorksList type="" />
+        <WorksList />
       </a-tab-pane>
       <a-tab-pane key="2" tab="图文" force-render>
         <WorksList type="0" />
@@ -18,16 +18,19 @@
         <span slot="tab">
           <a-divider type="vertical" />草稿箱
         </span>
-        <WorksList type="" state="0" />
+        <!--        <WorksList type="" :state="0" />-->
+        <DraftBoxList type="" :state="0" />
       </a-tab-pane>
-    </a-tabs></div>
+    </a-tabs>
+  </div>
 </template>
 
 <script>
 import WorksList from '@/views/manage/works/components/WorksList'
+import DraftBoxList from '@/views/manage/works/components/DraftBoxList'
 export default {
   name: 'Index',
-  components: { WorksList },
+  components: { DraftBoxList, WorksList },
   data() {
     return {
     }
