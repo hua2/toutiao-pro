@@ -1,7 +1,7 @@
 <template>
   <div class="publish">
     <page-header-wrapper :title="false">
-      <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
+      <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
         <a-form-item label="标题" required>
           <a-input
             v-model="title"
@@ -14,7 +14,7 @@
             <a-radio value="2">纯文字</a-radio>
           </a-radio-group>
         </a-form-item>
-        <a-row style="padding-left: 130px;">
+        <a-row style="padding-left: 128px;">
           <a-col :span="8">
             <a-form-item
               label="封面："
@@ -37,7 +37,7 @@
             </a-form-item>
           </a-col>
           <a-col :span="8">
-            <a-form-item label="图片：" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
+            <a-form-item label="图片：">
               <a-upload
                 name="secondImg"
                 accept="image/*"
@@ -55,7 +55,7 @@
             </a-form-item>
           </a-col>
           <a-col :span="8">
-            <a-form-item label="图片：" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
+            <a-form-item label="图片：">
               <a-upload
                 name="thirdImg"
                 accept="image/*"
@@ -89,12 +89,12 @@
         </a-form-item>
       </a-form>
       <div class="flex justify-center">
-        <a-button
-        >预览</a-button>
+        <a-button>预览</a-button>
         <a-button>存草稿</a-button>
         <a-button
           type="primary"
-          @click="saveInfo"
+          :loading="isLoading"
+          @click="saveInfo('0')"
         >发布</a-button>
       </div>
     </page-header-wrapper>
@@ -119,6 +119,7 @@ export default {
       original: 0,
       content: '',
       loading: false,
+      isLoading: false,
       uploading: {
         firstImg: false,
         secondImg: false,
@@ -134,38 +135,36 @@ export default {
     }
   },
   methods: {
-    publishMedia() {
-      this.$api.work.publishMedia().then(res => {
-        if (res.status === 'SUCCESS') {
-          console.log(res)
-        }
-      })
-    },
     originalClick() {
       this.$refs.articleModal.showDetailModal()
     },
-    handleSubmit(e) {
-      e.preventDefault()
+    saveInfo(type) {
       this.form.validateFields((err, values) => {
+        console.log('values', values)
         if (!err) {
-          console.log('Received values of form: ', values)
+          this.isLoading = true
+          this.$api.work.publishMedia({
+            ...values,
+            ...this.urls,
+            title: this.title,
+            type: type,
+            original: this.original,
+            content: this.content,
+            informationType: this.informationType,
+            id: this.id
+          }).then(res => {
+            this.isLoading = false
+            if (res.success) {
+              console.log(res)
+            } else {
+              this.$message.warning(res.message)
+            }
+          })
         }
       })
     },
-    saveInfo() {
-      this.$api.work.publishMedia({
-        type: 0,
-        title: this.title,
-        firstImg: this.urls.firstImg,
-        original: this.original,
-        content: this.content
-      }).then(res => {
-        if (res.status === 'SUCCESS') {
-          console.log(res)
-        }
-      })
-    },
-    handleUpload() {
+    handleUpload(e) {
+      console.log('e', e)
       this.$api.work.uploadPicture()
         .then(res => {
           this.urls.firstImg = res.data
@@ -181,10 +180,6 @@ export default {
         return false
       }
       return true
-    },
-    openDialog() {
-      this.$dialog('你好')
-      this.$success('你好')
     }
   }
 }
