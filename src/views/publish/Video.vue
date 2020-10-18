@@ -30,7 +30,7 @@
             name="firstImg"
             accept="image/*"
             list-type="picture-card"
-            class="avatar-uploader"
+            class="pic-upload"
             :show-upload-list="false"
             :custom-request="(e=>handleUpload(e,'firstImg'))"
             :before-upload="beforeUpload"
@@ -183,6 +183,13 @@ export default {
 <style scoped lang="less">
 .publish-video {
   width: 100%;
+    .pic-upload{
+   img{
+    width: 88px;
+    height: 88px;
+   }
+  }
+
   .p-v-title {
     position: absolute;
     right: 12px;

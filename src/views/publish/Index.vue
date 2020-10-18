@@ -14,67 +14,58 @@
             <a-radio :value="2">纯文字</a-radio>
           </a-radio-group>
         </a-form-item>
-        <a-row style="padding-left: 138px;">
-          <a-col :span="8">
-            <a-form-item
-              v-if="format===0 || format===1"
-              label="封面："
-              :required="true"
-            >
-              <a-upload
-                name="firstImg"
-                accept="image/*"
-                list-type="picture-card"
-                class="avatar-uploader"
-                :show-upload-list="false"
-                :custom-request="(e=>handleUpload(e,'firstImg'))"
-                :before-upload="beforeUpload"
-              >
-                <img v-if="urls.firstImg" :src="urls.firstImg" alt="avatar" />
-                <div v-else>
-                  <a-icon :type="uploading.firstImg ? 'loading' : 'plus'" />
-                </div>
-              </a-upload>
-            </a-form-item>
-          </a-col>
-          <a-col :span="8">
-            <a-form-item v-if="format===1" label="图片：">
-              <a-upload
-                name="secondImg"
-                accept="image/*"
-                list-type="picture-card"
-                class="avatar-uploader"
-                :show-upload-list="false"
-                :custom-request="(e=>handleUpload(e,'secondImg'))"
-                :before-upload="beforeUpload"
-              >
-                <img v-if="urls.secondImg" :src="urls.secondImg" alt="avatar" />
-                <div v-else>
-                  <a-icon :type="uploading.secondImg ? 'loading' : 'plus'" />
-                </div>
-              </a-upload>
-            </a-form-item>
-          </a-col>
-          <a-col :span="8">
-            <a-form-item v-if="format===1" label="图片：">
-              <a-upload
-                name="thirdImg"
-                accept="image/*"
-                list-type="picture-card"
-                class="avatar-uploader"
-                :show-upload-list="false"
-                :custom-request="(e=>handleUpload(e,'thirdImg'))"
-                :before-upload="beforeUpload"
-              >
-                <img v-if="urls.thirdImg" :src="urls.thirdImg" alt="avatar" />
-                <div v-else>
-                  <a-icon :type="uploading.thirdImg ? 'loading' : 'plus'" />
-                </div>
-              </a-upload>
-            </a-form-item>
-          </a-col>
-        </a-row>
-
+        <a-form-item
+          v-if="format===0 || format===1"
+          label="封面："
+          :required="true"
+        >
+          <a-upload
+            name="firstImg"
+            accept="image/*"
+            list-type="picture-card"
+            :show-upload-list="false"
+            class="pic-upload"
+            :custom-request="(e=>handleUpload(e,'firstImg'))"
+            :before-upload="beforeUpload"
+          >
+            <img v-if="urls.firstImg" :src="urls.firstImg" alt="avatar" />
+            <div v-else>
+              <a-icon :type="uploading.firstImg ? 'loading' : 'plus'" />
+            </div>
+          </a-upload>
+        </a-form-item>
+        <a-form-item v-if="format===1" label="图片：">
+          <a-upload
+            style="width:120px"
+            name="secondImg"
+            accept="image/*"
+            list-type="picture-card"
+            class="pic-upload"
+            :show-upload-list="false"
+            :custom-request="(e=>handleUpload(e,'secondImg'))"
+            :before-upload="beforeUpload"
+          >
+            <img v-if="urls.secondImg" :src="urls.secondImg" alt="avatar" />
+            <div v-else>
+              <a-icon :type="uploading.secondImg ? 'loading' : 'plus'" />
+            </div>
+          </a-upload>
+          <a-upload
+            style="width:120px"
+            name="thirdImg"
+            accept="image/*"
+            list-type="picture-card"
+            class="pic-upload"
+            :show-upload-list="false"
+            :custom-request="(e=>handleUpload(e,'thirdImg'))"
+            :before-upload="beforeUpload"
+          >
+            <img v-if="urls.thirdImg" :src="urls.thirdImg" alt="avatar" />
+            <div v-else>
+              <a-icon :type="uploading.thirdImg ? 'loading' : 'plus'" />
+            </div>
+          </a-upload>
+        </a-form-item>
         <a-form-item label="内容">
           <QuillEditor class="publish-editor" @change="onEditorChange" />
         </a-form-item>
@@ -194,6 +185,12 @@ export default {
 <style scoped lang="less">
 .publish {
   width: 100%;
+  .pic-upload{
+   img{
+    width: 88px;
+    height: 88px;
+   }
+  }
 
   button{
     margin-left: 12px;
