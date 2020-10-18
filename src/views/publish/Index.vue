@@ -8,15 +8,16 @@
           ></a-input>
         </a-form-item>
         <a-form-item label="板式：" :required="true">
-          <a-radio-group v-decorator="['format', { initialValue: '0' }]" name="form.format">
-            <a-radio value="0">单图</a-radio>
-            <a-radio value="1">三图</a-radio>
-            <a-radio value="2">纯文字</a-radio>
+          <a-radio-group v-model="format">
+            <a-radio :value="0">单图</a-radio>
+            <a-radio :value="1">三图</a-radio>
+            <a-radio :value="2">纯文字</a-radio>
           </a-radio-group>
         </a-form-item>
-        <a-row style="padding-left: 128px;">
+        <a-row style="padding-left: 138px;">
           <a-col :span="8">
             <a-form-item
+              v-if="format===0 || format===1"
               label="封面："
               :required="true"
             >
@@ -26,7 +27,7 @@
                 list-type="picture-card"
                 class="avatar-uploader"
                 :show-upload-list="false"
-                :custom-request="handleUpload"
+                :custom-request="(e=>handleUpload(e,'firstImg'))"
                 :before-upload="beforeUpload"
               >
                 <img v-if="urls.firstImg" :src="urls.firstImg" alt="avatar" />
@@ -37,14 +38,14 @@
             </a-form-item>
           </a-col>
           <a-col :span="8">
-            <a-form-item label="图片：">
+            <a-form-item v-if="format===1" label="图片：">
               <a-upload
                 name="secondImg"
                 accept="image/*"
                 list-type="picture-card"
                 class="avatar-uploader"
                 :show-upload-list="false"
-                :custom-request="handleUpload"
+                :custom-request="(e=>handleUpload(e,'secondImg'))"
                 :before-upload="beforeUpload"
               >
                 <img v-if="urls.secondImg" :src="urls.secondImg" alt="avatar" />
@@ -55,14 +56,14 @@
             </a-form-item>
           </a-col>
           <a-col :span="8">
-            <a-form-item label="图片：">
+            <a-form-item v-if="format===1" label="图片：">
               <a-upload
                 name="thirdImg"
                 accept="image/*"
                 list-type="picture-card"
                 class="avatar-uploader"
                 :show-upload-list="false"
-                :custom-request="handleUpload"
+                :custom-request="(e=>handleUpload(e,'thirdImg'))"
                 :before-upload="beforeUpload"
               >
                 <img v-if="urls.thirdImg" :src="urls.thirdImg" alt="avatar" />
@@ -75,12 +76,12 @@
         </a-row>
 
         <a-form-item label="内容">
-          <QuillEditor v-model="content" class="publish-editor" />
+          <QuillEditor class="publish-editor" @change="onEditorChange" />
         </a-form-item>
         <a-form-item label="声明原创：">
-          <a-radio-group v-decorator="['original', { rules: [{}], initialValue: '0' }]" name="original">
-            <a-radio value="0">原创</a-radio>
-            <a-radio value="1">非原创</a-radio>
+          <a-radio-group v-model="original">
+            <a-radio :value="0">原创</a-radio>
+            <a-radio :value="1">转载</a-radio>
           </a-radio-group>
           <template #help>
             声明原创要求：正文字数>300（动漫/摄影领域加V认证的作者除外），且原创内容多于引用内容。抄袭、洗稿等滥用原创行为将有处罚，
@@ -115,7 +116,6 @@ export default {
       type: 0,
       title: '',
       format: 0,
-      videoUrl: 0,
       original: 0,
       content: '',
       loading: false,
@@ -123,20 +123,21 @@ export default {
       uploading: {
         firstImg: false,
         secondImg: false,
-        thirdImg: false,
-        videoUrl: false
+        thirdImg: false
       },
       urls: {
         firstImg: null,
         secondImg: null,
-        thirdImg: null,
-        videoUrl: null
+        thirdImg: null
       }
     }
   },
   methods: {
     originalClick() {
       this.$refs.articleModal.showDetailModal()
+    },
+    onEditorChange(val) {
+      this.content = val
     },
     saveInfo(type) {
       this.form.validateFields((err, values) => {
@@ -149,13 +150,16 @@ export default {
             title: this.title,
             type: type,
             original: this.original,
+            format: this.format,
             content: this.content,
             informationType: this.informationType,
-            id: this.id
+            uid: this.$store.state.user.userId,
+            state: 1
           }).then(res => {
             this.isLoading = false
-            if (res.success) {
-              console.log(res)
+            if (res.status === 'SUCCESS') {
+              this.$message.success('发布成功')
+              this.$router.push('/manage/works/index')
             } else {
               this.$message.warning(res.message)
             }
@@ -163,11 +167,13 @@ export default {
         }
       })
     },
-    handleUpload(e) {
-      console.log('e', e)
-      this.$api.work.uploadPicture()
+    handleUpload(e, type) {
+      this.$api.work.uploadPicture(e.file, 0)
         .then(res => {
-          this.urls.firstImg = res.data
+          if (res.status === 'SUCCESS') {
+            this.urls[type] = res.data
+            this.$message.success('上传成功')
+          }
         })
         .catch(error => {
           console.log(error)
@@ -188,6 +194,7 @@ export default {
 <style scoped lang="less">
 .publish {
   width: 100%;
+
   button{
     margin-left: 12px;
   }

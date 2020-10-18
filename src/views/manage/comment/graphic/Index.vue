@@ -33,17 +33,16 @@
         </a-input-group>
       </div>
       <div class="w-full mt-16">
-        <CommonReplyModal />
+
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import CommonReplyModal from '@/views/manage/comment/components/CommonReplyModal'
 export default {
   name: 'Graphic',
-  components: { CommonReplyModal },
+  components: { },
   data() {
     return {
       form: {

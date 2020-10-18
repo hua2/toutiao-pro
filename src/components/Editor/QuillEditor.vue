@@ -61,7 +61,6 @@ export default {
       console.log('editor ready!', quill)
     },
     onEditorChange({ quill, html, text }) {
-      console.log('editor change!', quill, html, text)
       this.$emit('change', html)
     }
   }
