@@ -83,7 +83,7 @@
       </a-form>
       <div class="flex justify-center">
         <a-button :loading="isLoading" @click="handleClose">取消</a-button>
-        <a-button>预览</a-button>
+        <a-button @click="previewClick">预览</a-button>
         <a-button :loading="isDraftLoading" @click="publishDraft('0')">存草稿</a-button>
         <a-button
           type="primary"
@@ -95,6 +95,7 @@
       </div>
     </page-header-wrapper>
     <ArticleModal ref="articleModal" />
+    <PreviewModal ref="previewModal"/>
   </div>
 
 </template>
@@ -102,9 +103,10 @@
 <script>
 import QuillEditor from '@/components/Editor/QuillEditor'
 import ArticleModal from '@/views/publish/modules/ArticleModal'
+import PreviewModal from '@/views/publish/modules/PreviewModal'
 export default {
   name: 'Index',
-  components: { ArticleModal, QuillEditor },
+  components: { PreviewModal, ArticleModal, QuillEditor },
   data() {
     return {
       formData: {
@@ -144,6 +146,9 @@ export default {
     },
     originalClick() {
       this.$refs.articleModal.showDetailModal()
+    },
+    previewClick() {
+      this.$refs.previewModal.showPreviewModal()
     },
     onEditorChange(val) {
       this.formData.content = val

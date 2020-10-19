@@ -67,6 +67,24 @@ const work = {
     return axios.post(
       `/jm-comment-service/JmMediaComment/findPage`, data
     )
+  },
+  // 问答列表
+  findQuestionPage(data) {
+    return axios.post(
+      `/jm-information-service/JmMedia/findQuestionShowPage`, data
+    )
+  },
+  // 问答收藏
+  collectMedia(data) {
+    return axios.post(
+      `/jm-information-service/JmMedia/collect`, data
+    )
+  },
+  // 问答收藏列表
+  findCollectPage(data) {
+    return axios.post(
+      `/jm-information-service/JmMedia/findCollectPage`, data
+    )
   }
 }
 

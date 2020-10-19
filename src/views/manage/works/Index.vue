@@ -2,7 +2,6 @@
   <div class="works">
     <a-tabs default-active-key="1" @change="callback">
       <a-tab-pane key="1" tab="全部">
-        共 136 条内容
         <WorksList />
       </a-tab-pane>
       <a-tab-pane key="2" tab="图文" force-render>
@@ -12,13 +11,12 @@
         <WorksList type="1" />
       </a-tab-pane>
       <a-tab-pane key="4" tab="问答">
-        <WorksList type="3" />
+        <WorksList type="2" />
       </a-tab-pane>
       <a-tab-pane key="5">
         <span slot="tab">
           <a-divider type="vertical" />草稿箱
         </span>
-        <!--        <WorksList type="" :state="0" />-->
         <DraftBoxList type="" :state="0" />
       </a-tab-pane>
     </a-tabs>
