@@ -4,7 +4,8 @@
       <a-form>
         <div class="w-t-left flex">
           <a-form-item label="状态">
-            <a-select v-model="status" @change="searchData">
+            <a-select v-model="state" @change="searchData">
+              <a-select-option value="">全部</a-select-option>
               <a-select-option :value="0">草稿</a-select-option>
               <a-select-option :value="1">已发布</a-select-option>
               <a-select-option :value="2">待审核</a-select-option>
@@ -74,10 +75,24 @@
                 <span>点赞 {{ re.praiseNum }}</span>
                 <span>评论 {{ re.commentNum }}</span>
               </div>
-              <div style="flex:1 0 auto">
+              <div style="flex:1 0 auto" class="cursor-pointer">
                 <span>查看数据</span>
                 <span>查看评论</span>
-                <span>编辑</span>
+                <span>
+                  <a-button
+                    type="link"
+                    :disabled="re.state===1||re.state===2"
+                    :style="{
+                      color:
+                        re.state===1||re.state===2
+                          ? '#bfbfbf'
+                          : ''
+                    }"
+                    @click="editListClick(re.id,re.state)"
+                  >
+                    编辑
+                  </a-button>
+                </span>
                 <span>
                   <a-dropdown>
                     <a class="ant-dropdown-link" @click="e => e.preventDefault()">
@@ -121,7 +136,16 @@
                         <a href="javascript:;">关闭评论</a>
                       </a-menu-item>
                       <a-menu-item key="5">
-                        <a href="javascript:;">删除作品</a>
+                        <a href="javascript:;">
+                          <a-popconfirm
+                            title="确定执行此操作？"
+                            ok-text="确定"
+                            cancel-text="取消"
+                            @confirm="deleteMedia(re.id)"
+                          >
+                            删除作品
+                          </a-popconfirm>
+                        </a>
                       </a-menu-item>
                     </a-menu>
                   </a-dropdown>
@@ -157,16 +181,12 @@ export default {
     type: {
       type: String,
       default: ''
-    },
-    state: {
-      type: Number,
-      default: 1
     }
   },
   data() {
     return {
       releaseDate: [],
-      status: '',
+      state: '',
       loading: true,
       loadingMore: false,
       showLoadingMore: true,
@@ -181,9 +201,25 @@ export default {
   },
   created() {
     this.loadData()
-    this.status = this.state
   },
   methods: {
+    deleteMedia(id) {
+      this.$api.work.deleteDraftBox({
+        id: id
+      }).then(res => {
+        if (res.status === 'SUCCESS') {
+          this.loadData()
+        }
+      })
+    },
+    editListClick(id, state) {
+      if (id && (state === 0 || state === 3)) {
+        this.$router.push({
+          path: 'publish/index/',
+          query: { id: id }
+        })
+      }
+    },
     onlyMeClick(num, value) {
       this.$api.work.onlyMe({
         id: value,
@@ -191,7 +227,6 @@ export default {
         isOnly: num
       }).then(res => {
         if (res.status === 'SUCCESS') {
-          console.log(res)
           this.loadData()
         }
       })
@@ -203,7 +238,6 @@ export default {
         isStick: num
       }).then(res => {
         if (res.status === 'SUCCESS') {
-          console.log(res)
           this.loadData()
         }
       })
@@ -234,7 +268,7 @@ export default {
         type: this.type,
         releaseDateGte: this.releaseDateGte,
         releaseDateLte: this.releaseDateLte,
-        state: this.status,
+        state: this.state,
         only: this.only
       }).then(res => {
         if (res.status === 'SUCCESS') {

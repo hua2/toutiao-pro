@@ -41,42 +41,27 @@
             </div>
           </a-upload>
         </a-form-item>
-        <!-- <a-form-item label="视频简介">
+        <a-form-item label="视频简介">
           <a-textarea
-            v-model="videoInfo"
+            v-model="content"
             maxlength="400"
             :rows="1"
             @input="descVideoInput"
           ></a-textarea>
-          <span class="p-v-title">{{ videoRemnant }}/400</span>
-        </a-form-item> -->
+          <span class="p-v-title">{{ videoContent }}/400</span>
+        </a-form-item>
         <a-form-item label="创作类型：" required>
           <a-radio-group v-model="original">
-            <a-radio :value="0">原创</a-radio>
-            <a-radio :value="1">转载</a-radio>
+            <a-radio :value="1">原创</a-radio>
+            <a-radio :value="0">转载</a-radio>
           </a-radio-group>
         </a-form-item>
-        <!-- <a-form-item label="创作收益：">
-          发布原创视频可获得收益，非原创内容勾选原创将受到处罚，详见 <a href="#">查看详情</a>
-        </a-form-item>
-        <a-form-item label="水印设置：" help="视频中增加带有你昵称的水印查看预览">
-          <a-checkbox @change="onChange">
-            开启专属水印
-          </a-checkbox>
-        </a-form-item>
-        <a-form-item label="视频标签：">
-          <a-input />
-        </a-form-item>
-        <a-form-item label="扩展链接：" help="视频中增加带有你昵称的水印查看预览">
-          <a-checkbox @change="onChange">
-            在角马能源APP的固定位置插入连接
-          </a-checkbox>
-        </a-form-item> -->
       </a-form>
       <div class="flex justify-center">
-        <a-button>存草稿</a-button>
+        <a-button :loading="isLoading" @click="handleClose">取消</a-button>
         <a-button
           type="primary"
+          :disabled="title === '' || urls.videoUrl === null || urls.firstImg === null || original === ''"
           @click="saveInfo('1')"
         >发布</a-button>
       </div>
@@ -94,8 +79,9 @@ export default {
       form: this.$form.createForm(this, { name: 'video-form' }),
       type: 0,
       title: '',
-      videoUrl: 0,
-      original: 0,
+      content: '',
+      original: 1,
+      format: 3,
       loading: false,
       isLoading: false,
       uploading: {
@@ -106,24 +92,24 @@ export default {
         firstImg: null,
         videoUrl: null
       },
-      remnant: 0
+      remnant: 0,
+      videoContent: 0
     }
   },
   methods: {
-    onChange(e) {
-      console.log(`checked = ${e.target.checked}`)
+    handleClose() {
+      window.history.back()
     },
     descInput() {
       const txtVal = this.title.length
       this.remnant = 0 + txtVal
     },
-    // descVideoInput() {
-    //   const videoVal = this.videoInfo.length
-    //   this.remnant = 0 + videoVal
-    // },
+    descVideoInput() {
+      const videoVal = this.content.length
+      this.videoContent = 0 + videoVal
+    },
     saveInfo(type) {
       this.form.validateFields((err, values) => {
-        console.log('values', values)
         if (!err) {
           this.isLoading = true
           this.$api.work.publishMedia({
@@ -134,7 +120,6 @@ export default {
             original: this.original,
             format: this.format,
             content: this.content,
-            informationType: this.informationType,
             uid: this.$store.state.user.userId,
             state: 1
           }).then(res => {

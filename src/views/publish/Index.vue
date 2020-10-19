@@ -1,21 +1,22 @@
 <template>
   <div class="publish">
     <page-header-wrapper :title="false">
-      <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
+      <a-form :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
         <a-form-item label="标题" required>
           <a-input
-            v-model="title"
+            v-model="formData.title"
           ></a-input>
         </a-form-item>
         <a-form-item label="板式：" :required="true">
-          <a-radio-group v-model="format">
+          <a-radio-group v-model="formData.format">
             <a-radio :value="0">单图</a-radio>
             <a-radio :value="1">三图</a-radio>
             <a-radio :value="2">纯文字</a-radio>
+            <a-radio :value="3">大图</a-radio>
           </a-radio-group>
         </a-form-item>
         <a-form-item
-          v-if="format===0 || format===1"
+          v-if="formData.format===0 || formData.format===1 || formData.format===3"
           label="封面："
           :required="true"
         >
@@ -34,7 +35,7 @@
             </div>
           </a-upload>
         </a-form-item>
-        <a-form-item v-if="format===1" label="图片：">
+        <a-form-item v-if="formData.format===1" label="图片：">
           <a-upload
             style="width:120px"
             name="secondImg"
@@ -66,13 +67,13 @@
             </div>
           </a-upload>
         </a-form-item>
-        <a-form-item label="内容">
-          <QuillEditor class="publish-editor" @change="onEditorChange" />
+        <a-form-item label="内容" required>
+          <QuillEditor class="publish-editor" :value="formData.content" @change="onEditorChange" />
         </a-form-item>
-        <a-form-item label="声明原创：">
-          <a-radio-group v-model="original">
-            <a-radio :value="0">原创</a-radio>
-            <a-radio :value="1">转载</a-radio>
+        <a-form-item label="声明原创：" required>
+          <a-radio-group v-model="formData.original">
+            <a-radio :value="1">原创</a-radio>
+            <a-radio :value="0">转载</a-radio>
           </a-radio-group>
           <template #help>
             声明原创要求：正文字数>300（动漫/摄影领域加V认证的作者除外），且原创内容多于引用内容。抄袭、洗稿等滥用原创行为将有处罚，
@@ -81,11 +82,14 @@
         </a-form-item>
       </a-form>
       <div class="flex justify-center">
+        <a-button :loading="isLoading" @click="handleClose">取消</a-button>
         <a-button>预览</a-button>
-        <a-button>存草稿</a-button>
+        <a-button :loading="isDraftLoading" @click="publishDraft('0')">存草稿</a-button>
         <a-button
           type="primary"
           :loading="isLoading"
+          :disabled="formData.title === '' || ((formData.format===0 ||formData.format===3) ?urls.firstImg === null:formData.format===1? urls.firstImg === null ||urls.secondImg === null ||urls.thirdImg === null:'')|| formData.original === ''
+            || formData.content === ''"
           @click="saveInfo('0')"
         >发布</a-button>
       </div>
@@ -103,14 +107,16 @@ export default {
   components: { ArticleModal, QuillEditor },
   data() {
     return {
-      form: this.$form.createForm(this, { name: 'video-form' }),
+      formData: {
+        title: '',
+        format: 0,
+        original: 1,
+        content: ''
+      },
       type: 0,
-      title: '',
-      format: 0,
-      original: 0,
-      content: '',
       loading: false,
       isLoading: false,
+      isDraftLoading: false,
       uploading: {
         firstImg: false,
         secondImg: false,
@@ -120,49 +126,84 @@ export default {
         firstImg: null,
         secondImg: null,
         thirdImg: null
-      }
+      },
+      id: undefined
+    }
+  },
+  created() {
+    console.log(this.id)
+    // 获取 链接里的id
+    this.id = this.$route.query.id
+    if (this.id) {
+      this.findOne()
     }
   },
   methods: {
+    handleClose() {
+      window.history.back()
+    },
     originalClick() {
       this.$refs.articleModal.showDetailModal()
     },
     onEditorChange(val) {
-      this.content = val
+      this.formData.content = val
     },
     saveInfo(type) {
-      this.form.validateFields((err, values) => {
-        console.log('values', values)
-        if (!err) {
-          this.isLoading = true
-          this.$api.work.publishMedia({
-            ...values,
-            ...this.urls,
-            title: this.title,
-            type: type,
-            original: this.original,
-            format: this.format,
-            content: this.content,
-            informationType: this.informationType,
-            uid: this.$store.state.user.userId,
-            state: 1
-          }).then(res => {
-            this.isLoading = false
-            if (res.status === 'SUCCESS') {
-              this.$message.success('发布成功')
-              this.$router.push('/manage/works/index')
-            } else {
-              this.$message.warning(res.message)
-            }
-          })
+      this.isLoading = true
+      this.$api.work.publishMedia({
+        ...this.urls,
+        ...this.formData,
+        type: type,
+        uid: this.$store.state.user.userId,
+        state: 1
+      }).then(res => {
+        this.isLoading = false
+        if (res.status === 'SUCCESS') {
+          this.$message.success('发布成功')
+          this.$router.push('/manage/works/index')
+        } else {
+          this.$message.warning(res.message)
+        }
+      })
+    },
+    publishDraft(type) {
+      this.isDraftLoading = true
+      this.$api.work.publishDraft({
+        ...this.formData,
+        ...this.urls,
+        type: type,
+        uid: this.$store.state.user.userId,
+        state: 0
+      }).then(res => {
+        this.isDraftLoading = false
+        if (res.status === 'SUCCESS') {
+          this.$message.success('发布成功')
+          this.$router.push('/manage/works/index')
+        } else {
+          this.$message.warning(res.message)
+        }
+      })
+    },
+    // 编辑获取数据
+    findOne() {
+      this.$api.work.findOne({ id: this.id }).then(res => {
+        if (res.status === 'SUCCESS') {
+          console.log(res)
+          this.formData = res.data
+          this.urls.firstImg = res.data.firstImg
+          this.urls.secondImg = res.data.secondImg
+          this.urls.thirdImg = res.data.thirdImg
         }
       })
     },
     handleUpload(e, type) {
+      this.uploading[type] = true
       this.$api.work.uploadPicture(e.file, 0)
         .then(res => {
           if (res.status === 'SUCCESS') {
             this.urls[type] = res.data
+            this.uploading[type] = false
+            console.log(this.urls)
             this.$message.success('上传成功')
           }
         })

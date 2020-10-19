@@ -60,7 +60,7 @@
                 <span>评论 {{ re.commentNum }}</span>
               </div>
               <div style="flex:1 0 auto">
-                <span>编辑</span>
+                <span @click="editClick(re.id)">编辑</span>
                 <span>
                   <a-popconfirm
                     title="确定执行此操作？"
@@ -131,12 +131,17 @@ export default {
     this.types = this.type
   },
   methods: {
+    editClick(id) {
+      this.$router.push({
+        path: 'publish/index/',
+        query: { id: id }
+      })
+    },
     deleteDraftBox(id) {
       this.$api.work.deleteDraftBox({
         id: id
       }).then(res => {
-        if (res.status === 'SUCCESSS') {
-          console.log(res)
+        if (res.status === 'SUCCESS') {
           this.loadData()
         }
       })

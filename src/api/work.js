@@ -37,6 +37,18 @@ const work = {
       `/jm-information-service/JmMedia/publish`, data
     )
   },
+  // 编辑媒体
+  updateMedia(data) {
+    return axios.post(
+      `/jm-information-service/JmMedia/update`, data
+    )
+  },
+  // 发布草稿箱
+  publishDraft(data) {
+    return axios.post(
+      `/jm-information-service/JmMedia/publishDraft`, data
+    )
+  },
   // 上传图片 fileType为4
   uploadPicture(file, type) {
     const fd = new FormData()
