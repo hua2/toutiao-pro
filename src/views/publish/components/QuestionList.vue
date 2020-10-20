@@ -24,7 +24,7 @@
                 <div>收藏 {{ a.collectNum }}</div>
               </div>
               <div class="flex cursor-pointer">
-                <div class="text-red-500 mr-24" @click="askClick(a.id)">
+                <div class="text-red-500 mr-24" @click="askClick(a)">
                   <a-icon type="edit" />
                   写回答
                 </div>
@@ -81,11 +81,9 @@ export default {
     this.loadData()
   },
   methods: {
-    askClick(id) {
-      this.$router.push({
-        path: 'publish/publishQuestion',
-        query: { id: id }
-      })
+    askClick(a) {
+      const data = JSON.stringify(a) // result传递的query参数。我们转为string
+      this.$router.push({ path: 'publish/publishQuestion', query: { res: data }})
     },
     searchData() {
       this.pageNumber = 1

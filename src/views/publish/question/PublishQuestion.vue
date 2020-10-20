@@ -1,25 +1,14 @@
 <template>
   <div class="publish-question">
     <page-header-wrapper :title="false">
-      <h3>什么样的人不适合做管理者？</h3>
+      <h3>{{ result.title }}</h3>
       <div class="q-m-info flex justify-between">
         <div class="flex">
-          <div class="mr-24">回答 123</div>
-          <div>收藏 456</div>
-        </div>
-        <div class="flex cursor-pointer">
-          <div>123</div>
-<!--          <div-->
-<!--            v-if="a.isCollect === 0"-->
-<!--            @click="collectClick(a.id, 1)"-->
-<!--          ><a-icon type="star" />收藏</div>-->
-<!--          <div-->
-<!--            v-else-->
-<!--            @click="collectClick(a.id, 0)"-->
-<!--          ><a-icon type="star" />已收藏</div>-->
+          <div class="mr-24">回答 {{ result.answerNum }}</div>
+          <div>收藏 {{ result.collectNum }}</div>
         </div>
       </div>
-        <QuillEditor @change="onEditorChange" class="p-q-editor" />
+      <QuillEditor class="p-q-editor" @change="onEditorChange" />
       <div class="flex justify-between items-center mt-32">
         <div>
           <a-form-item label="声明原创：" required>
@@ -47,8 +36,13 @@ export default {
       content: '',
       original: 1,
       isLoading: false,
-      id: this.$route.query.id
+      res: this.$route.query.res,
+      result: {}
     }
+  },
+  created() {
+    const data = JSON.parse(this.res)
+    this.result = Object.assign({}, data)
   },
   methods: {
     onEditorChange(val) {
@@ -61,7 +55,7 @@ export default {
         uid: this.$store.state.user.userId,
         content: this.content,
         original: this.original,
-        pid: this.id
+        pid: this.result.id
       }).then(res => {
         this.isLoading = false
         if (res.status === 'SUCCESS') {

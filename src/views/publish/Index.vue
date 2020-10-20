@@ -84,7 +84,12 @@
       <div class="flex justify-center">
         <a-button :loading="isLoading" @click="handleClose">取消</a-button>
         <a-button @click="previewClick">预览</a-button>
-        <a-button :loading="isDraftLoading" @click="publishDraft('0')">存草稿</a-button>
+        <a-button
+          :loading="isDraftLoading"
+          :disabled="formData.title === '' || ((formData.format===0 ||formData.format===3) ?urls.firstImg === null:formData.format===1? urls.firstImg === null ||urls.secondImg === null ||urls.thirdImg === null:'')|| formData.original === ''
+            || formData.content === ''"
+          @click="publishDraft('0')"
+        >存草稿</a-button>
         <a-button
           type="primary"
           :loading="isLoading"
@@ -95,7 +100,7 @@
       </div>
     </page-header-wrapper>
     <ArticleModal ref="articleModal" />
-    <PreviewModal ref="previewModal"/>
+    <PreviewModal ref="previewModal" />
   </div>
 
 </template>
@@ -133,7 +138,6 @@ export default {
     }
   },
   created() {
-    console.log(this.id)
     // 获取 链接里的id
     this.id = this.$route.query.id
     if (this.id) {
@@ -148,7 +152,12 @@ export default {
       this.$refs.articleModal.showDetailModal()
     },
     previewClick() {
-      this.$refs.previewModal.showPreviewModal()
+      if (!this.formData.title || !this.formData.content) {
+        this.$message.error('请输入标题和内容')
+      } else {
+        this.$refs.previewModal.showPreviewModal()
+        this.$refs.previewModal.formData = this.formData
+      }
     },
     onEditorChange(val) {
       this.formData.content = val
