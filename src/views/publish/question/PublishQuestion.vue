@@ -20,17 +20,17 @@
         </div>
         <a-button type="primary" @click="saveInfo('2')">发布</a-button>
       </div>
-      <QuestionList />
+      <AnswerPageList :id="result.id" />
     </page-header-wrapper>
   </div>
 </template>
 
 <script>
 import QuillEditor from '@/components/Editor/QuillEditor'
-import QuestionList from '@/views/publish/components/QuestionList'
+import AnswerPageList from '@/views/publish/components/AnswerPageList'
 export default {
   name: 'PublishQuestion',
-  components: { QuestionList, QuillEditor },
+  components: { AnswerPageList, QuillEditor },
   data() {
     return {
       content: '',

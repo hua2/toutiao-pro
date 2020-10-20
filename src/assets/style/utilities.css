@@ -6710,5 +6710,10 @@ float: https://tailwindcss.com/docs/float
 .z-auto {
   z-index: auto
 }
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap
+}
 
 /*# sourceMappingURL=utilities.css.map */

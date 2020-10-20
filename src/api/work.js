@@ -85,6 +85,12 @@ const work = {
     return axios.post(
       `/jm-information-service/JmMedia/findCollectPage`, data
     )
+  },
+  // 问答回答列表
+  findAnswerPage(data) {
+    return axios.post(
+      `/jm-information-service/JmMedia/findAnswerPage`, data
+    )
   }
 }
 
