@@ -68,6 +68,12 @@ const work = {
       `/jm-comment-service/JmMediaComment/findPage`, data
     )
   },
+  // 评论管理-全部
+  findCommentPage(data) {
+    return axios.post(
+      `/jm-comment-service/JmMediaComment/findPersonalPage`, data
+    )
+  },
   // 问答列表
   findQuestionPage(data) {
     return axios.post(

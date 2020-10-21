@@ -15,7 +15,7 @@
         </div>
         <ShowMore
           v-if="an.contentShorter || an.imgsList.length !=0"
-          :show-height="128"
+          :show-height="44"
           :content="an.contentShorter"
         >
           <div

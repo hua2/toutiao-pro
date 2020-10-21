@@ -202,7 +202,6 @@ export default {
     findOne() {
       this.$api.work.findOne({ id: this.id }).then(res => {
         if (res.status === 'SUCCESS') {
-          console.log(res)
           this.formData = res.data
           this.urls.firstImg = res.data.firstImg
           this.urls.secondImg = res.data.secondImg

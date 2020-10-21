@@ -8,11 +8,11 @@
           <div>收藏 {{ result.collectNum }}</div>
         </div>
       </div>
-      <QuillEditor class="p-q-editor" @change="onEditorChange" />
+      <QuillEditor class="p-q-editor" :value="result.content" @change="onEditorChange" />
       <div class="flex justify-between items-center mt-32">
         <div>
           <a-form-item label="声明原创：" required>
-            <a-radio-group v-model="original">
+            <a-radio-group v-model="result.original">
               <a-radio :value="1">原创</a-radio>
               <a-radio :value="0">转载</a-radio>
             </a-radio-group>
@@ -37,16 +37,33 @@ export default {
       original: 1,
       isLoading: false,
       res: this.$route.query.res,
-      result: {}
+      result: {
+        content: ''
+      },
+      wenda: this.$route.query.wenda
     }
   },
   created() {
-    const data = JSON.parse(this.res)
-    this.result = Object.assign({}, data)
+    // 获取 链接里的id
+    this.id = this.$route.query.id
+    if (this.id) {
+      this.findOne()
+    }
   },
   methods: {
     onEditorChange(val) {
       this.content = val
+    },
+    findOne() {
+      this.$api.work.findOne({ id: this.id }
+      ).then(res => {
+        if (res.status === 'SUCCESS') {
+          this.result = res.data
+          if (this.wenda) {
+            this.result.content = ''
+          }
+        }
+      })
     },
     saveInfo(type) {
       this.isLoading = true

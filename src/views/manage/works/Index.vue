@@ -11,7 +11,7 @@
         <WorksList type="1" />
       </a-tab-pane>
       <a-tab-pane key="4" tab="问答">
-        <WorksList type="2" />
+        <AskList type="2" />
       </a-tab-pane>
       <a-tab-pane key="5">
         <span slot="tab">
@@ -26,9 +26,10 @@
 <script>
 import WorksList from '@/views/manage/works/components/WorksList'
 import DraftBoxList from '@/views/manage/works/components/DraftBoxList'
+import AskList from '@/views/manage/works/components/AskList'
 export default {
   name: 'Index',
-  components: { DraftBoxList, WorksList },
+  components: { AskList, DraftBoxList, WorksList },
   data() {
     return {
     }

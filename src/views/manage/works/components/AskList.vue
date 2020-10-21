@@ -3,34 +3,16 @@
     <div class="works-tab">
       <a-form>
         <div class="w-t-left flex">
-          <a-form-item label="状态">
-            <a-select v-model="state" @change="searchData">
-              <a-select-option value="">全部</a-select-option>
-              <a-select-option :value="0">草稿</a-select-option>
-              <a-select-option :value="1">已发布</a-select-option>
-              <a-select-option :value="2">待审核</a-select-option>
-              <a-select-option :value="3">已拒绝</a-select-option>
-            </a-select>
-          </a-form-item>
-          <a-form-item label="可见">
-            <a-select v-model="only" @change="searchData">
-              <a-select-option value="">全部</a-select-option>
-              <a-select-option :value="0">不可见</a-select-option>
-              <a-select-option :value="1">仅我可见</a-select-option>
+          <a-form-item label="形式">
+            <a-select v-model="wenda" @change="searchData">
+              <a-select-option :value="1">回答</a-select-option>
+              <a-select-option :value="0">提问</a-select-option>
             </a-select>
           </a-form-item>
         </div>
         <div class="w-t-right">
           <a-form-item>
             <a-range-picker v-model="releaseDate" format="YYYY-MM-DD" class="mr-24" @change="handleDate" />
-          </a-form-item>
-          <a-form-item>
-            <a-input-search
-              v-model="keywords"
-              placeholder="搜索关键词"
-              style="width: 150px"
-              @search="searchData"
-            />
           </a-form-item>
           <a-button type="primary" icon="search" @click="searchData">查询</a-button>
           <a-button type="primary" icon="reload" @click="searchReset">重置</a-button>
@@ -40,60 +22,40 @@
     <a-spin :spinning="loading">
       <div class="w-full" style="min-height: 600px">
         <div
-          v-for="(re, index) in data"
+          v-for="(ask, index) in data"
           :key="index"
           class="w-m-content flex"
         >
-
-          <a v-if="!re.videoUrl" href="#">
-            <img
-              :src="re.firstImg"
-              alt=""
-            /></a>
-          <video
-            v-else
-            controls
-            :src="re.videoUrl"
-            :poster="re.videoUrl + '?x-oss-process=video/snapshot,t_0000,f_jpg'"
-          />
           <div class="w-full">
             <div class="flex justify-between items-center">
               <h3>
-                <a href="#">{{ re.title }}</a>
+                <a href="#">{{ ask.title }}</a>
               </h3>
-              <p>{{ formatTime(re.releaseDate) }}</p>
+              <p>{{ formatTime(ask.releaseDate) }}</p>
             </div>
-            <div class="w-m-sign flex">
-              <p> {{ re.state===0?'草稿': re.state===1 ?'已发布': re.state===2?'待审核':'已拒绝' }}</p>
-              <p v-if="re.onlyStick === 1">
-                置顶
-              </p>
-              <p v-if="re.original !==0">{{ re.original===0?'':'原创' }}</p>
+            <div class="truncate-2">
+              <p v-html="ask.content"></p>
             </div>
             <div class="mt-16 flex items-center">
               <div class="w-m-num">
-                <span>阅读 {{ re.clickNum }}</span>
-                <span>点赞 {{ re.praiseNum }}</span>
-                <span>评论 {{ re.commentNum }}</span>
+                <span>阅读 {{ ask.clickNum }}</span>
+                <span>点赞 {{ ask.praiseNum }}</span>
+                <span>评论 {{ ask.commentNum }}</span>
               </div>
               <div style="flex:1 0 auto">
-                <span>查看数据</span>
-                <span>查看评论</span>
-                <span>
+                <span v-if="wenda === 1">查看数据</span>
+                <span v-if="wenda === 1" @click="editListClick(ask.id)">编辑</span>
+                <span v-if="wenda === 0">
                   <a-button
                     type="link"
-                    :disabled="re.state===1||re.state===2"
-                    :style="{
-                      color:
-                        re.state===1||re.state===2
-                          ? '#bfbfbf'
-                          : ''
-                    }"
-                    @click="editListClick(re.id,re.state)"
+                    style="color: #f56565"
+                    @click="writeListClick(ask.id, 1)"
                   >
-                    编辑
+                    <a-icon type="edit" />
+                    写回答
                   </a-button>
                 </span>
+                <span v-if="wenda === 0" @click="updateClick(ask.id)">修改</span>
                 <span>
                   <a-dropdown>
                     <a class="ant-dropdown-link" @click="e => e.preventDefault()">
@@ -104,47 +66,14 @@
                         <a href="javascript:;">分享</a>
                       </a-menu-item>
                       <a-menu-item key="2">
-                        <a-popconfirm
-                          title="同时仅支持一篇内容置顶，若已经你置顶其他内容，此内容将取代它作为置顶内容。"
-                          ok-text="确定"
-                          cancel-text="取消"
-                          @confirm="stickWorkClick(re.onlyStick === 1?0:1,re.id)"
-                        >
-                          <a v-if="re.onlyStick === 1" href="#">
-                            取消置顶
-                          </a>
-                          <a v-else href="#">
-                            置顶
-                          </a>
-                        </a-popconfirm>
-                      </a-menu-item>
-                      <a-menu-item key="3">
-                        <a-popconfirm
-                          title="确定执行此操作？。"
-                          ok-text="确定"
-                          cancel-text="取消"
-                          @confirm="onlyMeClick(re.only === 1?0:1,re.id)"
-                        >
-                          <a v-if="re.only === 1" href="#">
-                            设为公开
-                          </a>
-                          <a v-else href="#">
-                            设为仅我可见
-                          </a>
-                        </a-popconfirm>
-                      </a-menu-item>
-                      <a-menu-item key="4">
-                        <a href="javascript:;">关闭评论</a>
-                      </a-menu-item>
-                      <a-menu-item key="5">
                         <a href="javascript:;">
                           <a-popconfirm
                             title="确定执行此操作？"
                             ok-text="确定"
                             cancel-text="取消"
-                            @confirm="deleteMedia(re.id)"
+                            @confirm="deleteMedia(ask.id)"
                           >
-                            删除作品
+                            删除
                           </a-popconfirm>
                         </a>
                       </a-menu-item>
@@ -169,15 +98,18 @@
         </div>
       </div>
     </a-spin>
+    <UpdateModal ref="updateModal" @updateModal="loadData" />
   </div>
 </template>
 
 <script>
 import store from '@/store'
 import { formatTime } from '@/utils/time'
+import UpdateModal from '@/views/manage/works/modules/UpdateModal'
 
 export default {
-  name: 'WorksList',
+  name: 'AskList',
+  components: { UpdateModal },
   props: {
     type: {
       type: String,
@@ -187,7 +119,6 @@ export default {
   data() {
     return {
       releaseDate: [],
-      state: '',
       loading: true,
       loadingMore: false,
       showLoadingMore: true,
@@ -197,13 +128,18 @@ export default {
       keywords: '',
       releaseDateGte: '',
       releaseDateLte: '',
-      only: ''
+      wenda: 1
     }
   },
   created() {
     this.loadData()
   },
   methods: {
+    updateClick(id) {
+      this.$refs.updateModal.showUpdateModal()
+      this.$refs.updateModal.id = id
+      this.$refs.updateModal.findOne()
+    },
     deleteMedia(id) {
       this.$api.work.deleteDraftBox({
         id: id
@@ -213,38 +149,23 @@ export default {
         }
       })
     },
-    editListClick(id, state) {
-      if (id && (state === 0 || state === 3)) {
+    editListClick(id) {
+      if (id) {
         this.$router.push({
-          path: '/publish/index/',
+          name: 'publishPublishQuestion',
           query: { id: id }
         })
       }
     },
-    onlyMeClick(num, value) {
-      this.$api.work.onlyMe({
-        id: value,
-        userId: store.state.user.userId,
-        isOnly: num
-      }).then(res => {
-        if (res.status === 'SUCCESS') {
-          this.loadData()
-        }
-      })
-    },
-    stickWorkClick(num, value) {
-      this.$api.work.stickWork({
-        id: value,
-        userId: store.state.user.userId,
-        isStick: num
-      }).then(res => {
-        if (res.status === 'SUCCESS') {
-          this.loadData()
-        }
-      })
+    writeListClick(id, wenda) {
+      if (id || wenda) {
+        this.$router.push({
+          name: 'publishPublishQuestion',
+          query: { id: id, wenda: wenda }
+        })
+      }
     },
     searchReset() {
-      this.keywords = ''
       this.releaseDate = []
       this.releaseDateGte = ''
       this.releaseDateLte = ''
@@ -267,10 +188,9 @@ export default {
         userId: store.state.user.userId,
         keywords: this.keywords,
         type: this.type,
+        wenda: this.wenda,
         releaseDateGte: this.releaseDateGte,
-        releaseDateLte: this.releaseDateLte,
-        state: this.state,
-        only: this.only
+        releaseDateLte: this.releaseDateLte
       }).then(res => {
         if (res.status === 'SUCCESS') {
           this.loading = false
@@ -288,9 +208,7 @@ export default {
         keywords: this.keywords,
         type: this.type,
         releaseDateGte: this.releaseDateGte,
-        releaseDateLte: this.releaseDateLte,
-        state: this.status,
-        only: 0
+        releaseDateLte: this.releaseDateLte
       }).then(res => {
         if (res.status === 'SUCCESS') {
           this.data = this.data.concat(res.data.data)
@@ -353,18 +271,6 @@ export default {
       margin-right: 24px;
       object-fit:cover;
       border-radius: 2px;
-    }
-    .w-m-sign {
-      p {
-        margin-right: 8px;
-        font-size: 12px;
-        &:nth-child(2),
-        &:nth-child(3) {
-          color: #3d89ff;
-          padding: 0 6px;
-          background-color: #e6f0ff;
-        }
-      }
     }
     span{
       cursor: pointer;

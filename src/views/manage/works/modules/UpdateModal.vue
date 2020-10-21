@@ -1,0 +1,151 @@
+<template>
+  <div>
+    <a-modal
+      title="提问"
+      :visible="visible"
+      :confirm-loading="confirmLoading"
+      width="720px"
+      cancel-text="取消"
+      ok-text="确定"
+      class="update-modal"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    >
+      <div class="mb-16">
+        <a-textarea
+          v-model="formData.title"
+          maxlength="30"
+          :rows="1"
+          @input="descInput"
+        ></a-textarea>
+        <span>{{ remnant }}/30</span>
+      </div>
+      <div class="a-m-content">
+        <a-textarea
+          v-model="formData.content"
+          :rows="4"
+        />
+        <div class="mt-24">
+          <a-upload
+            name="firstImg"
+            accept="image/*"
+            list-type="picture-card"
+            :show-upload-list="false"
+            class="pic-upload"
+            :custom-request="(e=>handleUpload(e,'firstImg'))"
+            :before-upload="beforeUpload"
+          >
+            <img v-if="urls.firstImg" :src="urls.firstImg" alt="avatar" />
+            <div v-else>
+              <a-icon :type="uploading.firstImg ? 'loading' : 'plus'" />
+            </div>
+          </a-upload>
+        </div>
+      </div>
+    </a-modal>
+  </div>
+</template>
+<script>
+export default {
+  name: 'UpdateModal',
+  data() {
+    return {
+      visible: false,
+      confirmLoading: false,
+      uploading: {
+        firstImg: false
+      },
+      urls: {
+        firstImg: null
+      },
+      remnant: 0,
+      formData: {
+        title: '',
+        content: ''
+      },
+      id: undefined
+    }
+  },
+  methods: {
+    descInput() {
+      const txtVal = this.title.length
+      this.remnant = 0 + txtVal
+    },
+    showUpdateModal() {
+      this.visible = true
+    },
+    findOne() {
+      this.$api.work.findOne({
+        id: this.id
+      }).then(res => {
+        if (res.status === 'SUCCESS') {
+          this.formData = res.data
+          this.urls.firstImg = res.data.firstImg
+        }
+      })
+    },
+    handleOk(e) {
+      this.confirmLoading = true
+      this.$api.work.updateMedia({
+        ...this.urls,
+        ...this.formData,
+        id: this.id,
+        type: 2
+      }).then(res => {
+        if (res.status === 'SUCCESS') {
+          this.visible = false
+          this.confirmLoading = false
+          this.$emit('updateModal')
+        }
+      })
+    },
+    handleCancel(e) {
+      this.visible = false
+    },
+    handleUpload(e, type) {
+      this.uploading[type] = true
+      this.$api.work.uploadPicture(e.file, 0)
+        .then(res => {
+          if (res.status === 'SUCCESS') {
+            this.urls[type] = res.data
+            this.uploading[type] = false
+            console.log(this.urls)
+            this.$message.success('上传成功')
+          }
+        })
+        .catch(error => {
+          console.log(error)
+          this.$message.error('upload error!')
+        })
+    },
+    beforeUpload(file) {
+      if (!file.type.startsWith('image')) {
+        this.$message.error('请上传图片')
+        return false
+      }
+      return true
+    }
+  }
+}
+</script>
+<style scoped lang="less">
+  .update-modal {
+    .pic-upload{
+      img{
+        width: 88px;
+        height: 88px;
+      }
+    }
+    /deep/ .ant-modal-body {
+      textarea.ant-input{
+        border: unset;
+        border-bottom: 1px solid #e8e8e8;
+      }
+      .ant-upload-picture-card-wrapper{
+        position: unset;
+        right: unset;
+        margin: unset;
+      }
+  }
+  }
+</style>

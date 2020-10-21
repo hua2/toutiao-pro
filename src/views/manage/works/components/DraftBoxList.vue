@@ -133,7 +133,7 @@ export default {
   methods: {
     editClick(id) {
       this.$router.push({
-        path: 'publish/index/',
+        name: 'publishIndex',
         query: { id: id }
       })
     },
