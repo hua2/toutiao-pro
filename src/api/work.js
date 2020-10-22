@@ -86,6 +86,30 @@ const work = {
       `/jm-information-service/JmMedia/collect`, data
     )
   },
+  // 评论管理-点赞
+  praiseCommentMedia(data) {
+    return axios.post(
+      `/jm-comment-service/JmMediaComment/praise`, data
+    )
+  },
+  // 评论管理-置顶
+  mediaCommentStick(data) {
+    return axios.post(
+      `/jm-comment-service/JmMediaComment/stick`, data
+    )
+  },
+  // 评论管理-删除
+  deleteCommentMedia(data) {
+    return axios.post(
+      `/jm-comment-service/JmMediaComment/delete`, data
+    )
+  },
+  // 评论管理-发布回复
+  publishComment(data) {
+    return axios.post(
+      `/jm-comment-service/JmMediaComment/publishComment`, data
+    )
+  },
   // 问答收藏列表
   findCollectPage(data) {
     return axios.post(
