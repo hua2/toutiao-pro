@@ -84,7 +84,7 @@ export default {
     askClick(id) {
       if (id) {
         this.$router.push({
-          path: 'publish/publishQuestion/',
+          name: 'publishPublishQuestion/',
           query: { id: id }
         })
       }

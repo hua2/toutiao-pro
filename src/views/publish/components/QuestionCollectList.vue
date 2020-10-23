@@ -24,7 +24,7 @@
                 <div>收藏 {{ a.collectNum }}</div>
               </div>
               <div class="flex">
-                <div class="q-m-btn text-red-500 mr-24" @click="$router.push('/publish/publishQuestion')">
+                <div class="q-m-btn text-red-500 mr-24" @click="writeClick">
                   <a-icon type="edit" />
                   写回答
                 </div>
@@ -77,6 +77,11 @@ export default {
     this.loadData()
   },
   methods: {
+    writeClick() {
+      this.$router.push({
+        name: 'publishPublishQuestion'
+      })
+    },
     searchData() {
       this.pageNumber = 1
       this.loadData()
