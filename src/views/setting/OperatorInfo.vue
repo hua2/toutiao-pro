@@ -9,7 +9,7 @@
       />
       <InfoModal
         title="运营人"
-        content="*灵 (4312*****1022)"
+        content="** (4312*****1022)"
         edit="更改运营人"
       />
       <InfoModal title="网站" content="无" edit="更改网站" />

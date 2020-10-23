@@ -196,16 +196,16 @@ export default {
 .comment{
   width: 100%;
   display: flex;
-  padding: 0 32px;
+  /*padding: 0 32px;*/zh
   .comment-list {
     width: 50%;
     .c-l-left{
       width: 100%;
       cursor: pointer;
-      padding: 20px 0;
+      padding: 20px;
       border-bottom: 1px solid #e2e8f0;
       &.click{
-        background: #00000030;
+        border-left: 1px solid red;
       }
       .c-l-top {
         img {

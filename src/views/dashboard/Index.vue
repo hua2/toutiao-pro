@@ -3,13 +3,13 @@
     <template v-slot:content>
       <div class="page-header-content">
         <div class="avatar">
-          <a-avatar size="large" :src="userInfo.avatar" />
+          <a-avatar size="large" :src="account.headPicUrl" />
         </div>
         <div class="content">
           <div class="content-title">
             {{ timeFix }}，{{ name }}<span class="welcome-text">，{{ welcome }}</span>
           </div>
-          <div>角马能源 | 让“能源“更高效</div>
+          <div>{{ name }} | 让“能源“更高效</div>
         </div>
       </div>
     </template>
@@ -85,29 +85,6 @@
           :sm="24"
           :xs="24"
         >
-          <a-card title="快速开始 / 便捷导航" style="margin-bottom: 24px" :bordered="false" :body-style="{padding: 0}">
-            <div class="item-group">
-              <a>操作一</a>
-              <a>操作二</a>
-              <a>操作三</a>
-              <a>操作四</a>
-              <a>操作五</a>
-              <a>操作六</a>
-              <a-button size="small" type="primary" ghost icon="plus">添加</a-button>
-            </div>
-          </a-card>
-          <a-card
-            title="XX 指数"
-            style="margin-bottom: 24px"
-            :loading="radarLoading"
-            :bordered="false"
-            :body-style="{ padding: 0 }"
-          >
-            <div style="min-height: 400px;">
-              <!-- :scale="scale" :axis1Opts="axis1Opts" :axis2Opts="axis2Opts"  -->
-              <radar :data="radarData" />
-            </div>
-          </a-card>
           <a-card :loading="loading" title="团队" :bordered="false">
             <div class="members">
               <a-row>
@@ -130,13 +107,11 @@
 import { timeFix } from '@/utils/util'
 import { mapState } from 'vuex'
 import { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
-import { Radar } from '@/components'
 
 export default {
   name: 'Workplace',
   components: {
-    PageHeaderWrapper,
-    Radar
+    PageHeaderWrapper
   },
   data() {
     return {
@@ -145,7 +120,6 @@ export default {
       user: {},
       projects: [],
       loading: true,
-      radarLoading: true,
       activities: [],
       teams: [],
 
@@ -195,6 +169,9 @@ export default {
     }),
     userInfo() {
       return this.$store.getters.userInfo
+    },
+    account() {
+      return this.$store.state.user.info
     }
   },
   created() {
