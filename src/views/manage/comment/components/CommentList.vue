@@ -28,7 +28,7 @@
               <div class="c-l-reply mt-12 flex items-center justify-between">
                 <div> {{ formatTime(co.mediaBean.releaseDate) }}</div>
                 <div class="flex">
-                  <p @click="replyClick(co)" >回复 <span v-if="co.commentNum">{{co.commentNum}}</span></p>
+                  <p @click="replyClick(co)">回复 <span v-if="co.commentNum">{{ co.commentNum }}</span></p>
                   <p> <span
                         v-if="co.isPraise === 0"
                         @click="praiseCommentMedia(co.id, 1)"
@@ -196,7 +196,7 @@ export default {
 .comment{
   width: 100%;
   display: flex;
-  /*padding: 0 32px;*/zh
+  padding-right: 32px;
   .comment-list {
     width: 50%;
     .c-l-left{
