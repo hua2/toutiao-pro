@@ -34,7 +34,7 @@
               <p>{{ formatTime(ask.releaseDate) }}</p>
             </div>
             <div class="truncate-2">
-              <p v-html="ask.content"></p>
+              <p v-html="ask.contentShorter"></p>
             </div>
             <div class="mt-16 flex items-center">
               <div class="w-m-num">
