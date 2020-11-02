@@ -13,6 +13,7 @@
             v-for="(gra, index) in data"
             :key="index"
             class="graphic-list flex"
+            @click="viewCommentClick(gra)"
           >
             <a v-if="!gra.videoUrl" href="#">
               <img
@@ -35,7 +36,7 @@
             :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
           >
             <a-spin v-if="loadingMore" />
-            <a-button v-else @click="onLoadMore">
+            <a-button v-else @click="onLoadMoreView">
               loading more
             </a-button>
           </div>
@@ -46,31 +47,19 @@
       </a-spin>
     </div>
     <div class="graphic-right pl-32">
-      <div class="g-r-sort flex items-center">
-        <h3>排序：</h3>
-        <a-input-group compact>
-          <a-select default-value="Option1" style="width: 160px">
-            <a-select-option value="Option1">
-              最新
-            </a-select-option>
-            <a-select-option value="Option2">
-              最热
-            </a-select-option>
-          </a-select>
-        </a-input-group>
-      </div>
-      <div class="w-full mt-16">
-
-      </div>
+      <GraphicReplyList ref="graphicReplyList" />
     </div>
   </div>
 </template>
 
 <script>
 import store from '@/store'
+import { formatTime } from '@/utils/time'
+import GraphicReplyList from '@/views/manage/comment/components/GraphicReplyList'
 
 export default {
   name: 'GraphicList',
+  components: { GraphicReplyList },
   props: {
     type: {
       type: String,
@@ -101,26 +90,31 @@ export default {
     },
     loadData() {
       this.loading = true
-      this.$api.work.findPersonalPage({
+      this.$api.work.findPersonalMediaPage({
         pageNumber: this.pageNumber,
         pageSize: this.pageSize,
         userId: store.state.user.userId,
+        visitUserId: store.state.user.userId,
         keywords: this.keywords,
         type: this.type
       }).then(res => {
         if (res.status === 'SUCCESS') {
           this.loading = false
           this.data = res.data.data
+          if (this.data && this.data.length > 0) {
+            this.viewCommentClick(this.data[0])
+          }
         }
       })
     },
-    onLoadMore() {
+    onLoadMoreView() {
       this.loadingMore = true
       this.pageNumber++
-      this.$api.work.findPersonalPage({
+      this.$api.work.findPersonalMediaPage({
         pageNumber: this.pageNumber,
         pageSize: this.pageSize,
         userId: store.state.user.userId,
+        visitUserId: store.state.user.userId,
         keywords: this.keywords,
         type: this.type
       }).then(res => {
@@ -129,6 +123,12 @@ export default {
           this.loadingMore = false
         }
       })
+    },
+    formatTime,
+    viewCommentClick(data) {
+      console.log(data)
+      this.$refs.graphicReplyList.graphicReplyData = data
+      this.$refs.graphicReplyList.loadViewData()
     }
   }
 }
@@ -139,7 +139,7 @@ export default {
     width: 100%;
     margin-top: 32px;
     .graphic-left {
-      width: 100%;
+      width: 50%;
       padding: 0 20px;
       overflow: hidden;
       border-right: 1px solid #e2e8f0;
@@ -180,13 +180,6 @@ export default {
     }
     .graphic-right {
       width: 66.6%;
-      .g-r-sort{
-        width: 272px;
-        h3 {
-          width: 60px;
-        }
-      }
-
     }
   }
 

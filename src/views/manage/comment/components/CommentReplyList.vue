@@ -3,7 +3,7 @@
     <div class="c-l-left">
       <div class="c-l-top flex items-center">
         <img
-          src="https://sf6-ttcdn-tos.pstatp.com/img/pgc-image/eeef41c1c02544a3ae8f494f10c2e928~120x256.image"
+          :src="replyData.headPicUrl"
           alt=""
         />
         <strong><a href="#">{{ replyData.nickName }}</a></strong>
@@ -118,18 +118,18 @@
               </div>
             </div>
           </div>
-        </div>
-        <div
-          v-if="showLoadingMore && data.length !== 0"
-          :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
-        >
-          <a-spin v-if="loadingMore" />
-          <a-button v-else @click="onLoadMore()">
-            loading more
-          </a-button>
-        </div>
-        <div v-else class="mt-64">
-          <a-empty description="暂无回复" />
+          <div
+            v-if="showLoadingMore && data.length !== 0"
+            :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
+          >
+            <a-spin v-if="loadingMore" />
+            <a-button v-else @click="onLoadMore()">
+              loading more
+            </a-button>
+          </div>
+          <div v-else class="mt-64">
+            <a-empty description="暂无回复" />
+          </div>
         </div>
       </a-spin>
     </div>
@@ -195,7 +195,7 @@ export default {
       }).then(res => {
         if (res.status === 'SUCCESS') {
           this.loading = false
-          this.data = res.data.data
+          this.data = res.data ? res.data.data : []
         }
       })
     },
@@ -210,7 +210,7 @@ export default {
         type: this.replyData.mediaBean.type
       }).then(res => {
         if (res.status === 'SUCCESS') {
-          this.data = this.data.concat(res.data.data)
+          this.data = this.data.concat(res.data ? res.data.data : [])
           this.loadingMore = false
         }
       })

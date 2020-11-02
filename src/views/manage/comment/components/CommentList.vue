@@ -75,18 +75,18 @@
               </div>
             </div>
           </div>
-        </div>
-        <div
-          v-if="showLoadingMore && data.length !== 0"
-          :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
-        >
-          <a-spin v-if="loadingMore" />
-          <a-button v-else @click="onLoadMore">
-            loading more
-          </a-button>
-        </div>
-        <div v-else class="mt-64">
-          <a-empty />
+          <div
+            v-if="showLoadingMore && data.length !== 0"
+            :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
+          >
+            <a-spin v-if="loadingMore" />
+            <a-button v-else @click="onLoadMore">
+              loading more
+            </a-button>
+          </div>
+          <div v-else class="mt-64">
+            <a-empty />
+          </div>
         </div>
       </a-spin></div>
     <CommentReplyList ref="replyList" @change="loadData" />

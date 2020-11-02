@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-tabs default-active-key="1" @change="callback">
+    <a-tabs default-active-key="1">
       <a-tab-pane key="1" tab="全部">
         <CommentList />
       </a-tab-pane>
@@ -11,7 +11,7 @@
         <GraphicList type="1" />
       </a-tab-pane>
       <a-tab-pane key="4" tab="问答">
-        <GraphicList type="2" />
+        <AskCommentList type="2" />
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -20,17 +20,14 @@
 <script>
 import GraphicList from '@/views/manage/comment/components/GraphicList'
 import CommentList from '@/views/manage/comment/components/CommentList'
+import AskCommentList from '@/views/manage/comment/components/AskCommentList'
 export default {
   name: 'Index',
-  components: { CommentList, GraphicList },
+  components: { AskCommentList, CommentList, GraphicList },
   data() {
     return {}
   },
-  methods: {
-    callback(key) {
-      console.log(key)
-    }
-  }
+  methods: {}
 }
 </script>
 
