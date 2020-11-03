@@ -177,7 +177,7 @@ export default {
       }).then(res => {
         if (res.status === 'SUCCESS') {
           this.loading = false
-          this.data = res.data.data
+          this.data = res.data ? res.data.data : []
         }
       })
     },
@@ -196,7 +196,7 @@ export default {
         only: 0
       }).then(res => {
         if (res.status === 'SUCCESS') {
-          this.data = this.data.concat(res.data.data)
+          this.data = this.data.concat(res.data ? res.data.data : [])
           this.loadingMore = false
         }
       })
