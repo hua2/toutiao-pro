@@ -8,7 +8,7 @@
             <div class="label">安全评分</div>
             <div class="content">
               <div class="account-info">
-                <a-progress :percent="30" style="width: 40%" />
+<!--                <a-progress :percent="30" style="width: 40%" />-->
                 <div class="mt-24">
                   <div class="account-info-title">
                     你的帐号存在安全风险，建议优化以下 2 项
@@ -20,66 +20,76 @@
                         绑定手机
                       </div>
                       <div class="content">
-                        当前已绑定186****5527<a href="#">更换手机</a>
+                        当前已绑定{{ account.mobile }}<a href="#" @click="accountMobileClick">更换手机</a>
                       </div>
                     </div>
-                    <div class="account-info-item">
-                      <div class="label">
-                        <img
-                          src="../../assets/img/warn-icon.png"
-                          alt=""
-                        />登录密码
-                      </div>
-                      <div class="content">
-                        密码半年内未修改过<a href="#">修改</a>
-                      </div>
-                    </div>
-                    <div class="account-info-item">
-                      <div class="label">
-                        <img
-                          src="../../assets/img/warn-icon.png"
-                          alt=""
-                        />可信校验
-                      </div>
-                      <div class="content">
-                        开启后，非可信设备登录需验证手机号<a href="#">开启</a>
-                      </div>
-                    </div>
+                    <!--                    <div class="account-info-item">-->
+                    <!--                      <div class="label">-->
+                    <!--                        <img-->
+                    <!--                          src="../../assets/img/warn-icon.png"-->
+                    <!--                          alt=""-->
+                    <!--                        />登录密码-->
+                    <!--                      </div>-->
+                    <!--                      <div class="content">-->
+                    <!--                        密码半年内未修改过<a href="#">修改</a>-->
+                    <!--                      </div>-->
+                    <!--                    </div>-->
+                    <!--                    <div class="account-info-item">-->
+                    <!--                      <div class="label">-->
+                    <!--                        <img-->
+                    <!--                          src="../../assets/img/warn-icon.png"-->
+                    <!--                          alt=""-->
+                    <!--                        />可信校验-->
+                    <!--                      </div>-->
+                    <!--                      <div class="content">-->
+                    <!--                        开启后，非可信设备登录需验证手机号<a href="#">开启</a>-->
+                    <!--                      </div>-->
+                    <!--                    </div>-->
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <InfoModal
-          title="帐号操作"
-          content="登录、敏感操作记录"
-          edit="查看操作记录"
-        />
+        <!--        <InfoModal-->
+        <!--          title="帐号操作"-->
+        <!--          content="登录、敏感操作记录"-->
+        <!--          edit="查看操作记录"-->
+        <!--        />-->
       </div>
     </div>
-    <div class="user flex pt-16">
-      <div class="account-title">帐号认证</div>
-      <div class="account-container">
-        <InfoModal
-          title="创作能力证明"
-          content="提交你的其它自媒体平台帐号信息，提高站内声明原创成功率；帮助平台快速发现你，为你提供更好的资源和服务"
-          edit="提交证明"
-        />
-      </div>
-    </div>
+    <!--    <div class="user flex pt-16">-->
+    <!--      <div class="account-title">帐号认证</div>-->
+    <!--      <div class="account-container">-->
+    <!--        <InfoModal-->
+    <!--          title="创作能力证明"-->
+    <!--          content="提交你的其它自媒体平台帐号信息，提高站内声明原创成功率；帮助平台快速发现你，为你提供更好的资源和服务"-->
+    <!--          edit="提交证明"-->
+    <!--        />-->
+    <!--      </div>-->
+    <!--    </div>-->
+    <AccountMobileModal ref="accountMobileModal" />
   </div>
 </template>
 
 <script>
-import InfoModal from '@/views/setting/components/InfoModal'
+import AccountMobileModal from '@/views/setting/modules/AccountMobileModal'
 export default {
   name: 'SafetyInfo',
-  components: { InfoModal },
+  components: { AccountMobileModal },
   data() {
     return {}
   },
-  methods: {}
+  computed: {
+    account() {
+      return this.$store.state.user.info
+    }
+  },
+  methods: {
+    accountMobileClick() {
+      this.$refs.accountMobileModal.showMobileModal()
+    }
+  }
 }
 </script>
 

@@ -216,7 +216,6 @@ export default {
           if (res.status === 'SUCCESS') {
             this.urls[type] = res.data
             this.uploading[type] = false
-            console.log(this.urls)
             this.$message.success('上传成功')
           }
         })

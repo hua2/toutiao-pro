@@ -3,7 +3,7 @@
     <a-tabs default-active-key="1" @change="callback">
       <a-tab-pane key="1" tab="账号详情">
         <AccountInfo />
-        <OperatorInfo />
+        <!--        <OperatorInfo />-->
         <SafetyInfo />
       </a-tab-pane>
       <a-tab-pane key="2" tab="功能设置" force-render>
@@ -18,11 +18,10 @@
 
 <script>
 import AccountInfo from '@/views/setting/AccountInfo'
-import OperatorInfo from '@/views/setting/OperatorInfo'
 import SafetyInfo from '@/views/setting/SafetyInfo'
 export default {
   name: 'Index',
-  components: { SafetyInfo, OperatorInfo, AccountInfo },
+  components: { SafetyInfo, AccountInfo },
   data() {
     return {}
   },

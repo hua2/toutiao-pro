@@ -36,7 +36,7 @@
               :rows="4"
             />
             <div class="flex justify-end mt-12">
-              <a-button type="primary"  :disabled="replyContent===''" @click="publishReplyComment(replyData.type,replyData.aid,se.id,replyData.id,se.uid)">发布</a-button>
+              <a-button type="primary" :disabled="replyContent===''" @click="publishReplyComment(replyData.type,replyData.aid,se.id,replyData.id,se.uid)">发布</a-button>
             </div>
           </div>
         </div>

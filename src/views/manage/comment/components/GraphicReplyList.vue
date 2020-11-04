@@ -97,7 +97,7 @@
         </div>
       </div>
     </a-spin>
-    <SecondReplyList ref="secondReplyList" @changeList="loadViewData"/>
+    <SecondReplyList ref="secondReplyList" @changeList="loadViewData" />
   </div>
 </template>
 
