@@ -54,9 +54,8 @@ const vueConfig = {
       }
     }
   },
-
+  publicPath: '/admin/',
   devServer: {
-    // development server port 8000
     port: 8000,
     proxy: 'https://www.fastmock.site/mock/a0bd9f5bd79a1872a56580697c282950/toutiao'
   },
