@@ -1,43 +1,51 @@
 <template>
-  <div class="ask-comment">
-    <a-spin :spinning="loading">
-      <div class="a-s-list" style="min-height: 600px">
-        <div
-          v-for="(c, index) in data"
-          :key="index"
-        >
-          <div class="a-s-common">
-            <h3 class="truncate">{{ c.title }}</h3>
-            <p class="truncate-2">{{ c.contentShorter }}</p>
-            <div class="flex justify-between">
-              <span>{{ formatTime(c.createDate) }}</span>
-              <span>回复 <span v-if="c.commentNum">{{ c.commentNum }}</span></span>
+  <div class="ask-comment flex">
+    <div class="a-s-list">
+      <a-spin :spinning="loading">
+        <div style="min-height: 600px">
+          <div
+            v-for="(c, index) in data"
+            :key="index"
+            @click="viewCommentClick(c)"
+          >
+            <div class="a-s-common">
+              <h3 class="truncate">{{ c.title }}</h3>
+              <p class="truncate-2">{{ c.contentShorter }}</p>
+              <div class="flex justify-between">
+                <span>{{ formatTime(c.createDate) }}</span>
+                <span>回复 <span v-if="c.commentNum">{{ c.commentNum }}</span></span>
+              </div>
             </div>
           </div>
+          <div
+            v-if="showLoadingMore && data.length !== 0"
+            :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
+          >
+            <a-spin v-if="loadingMore" />
+            <a-button v-else @click="onLoadMore">
+              loading more
+            </a-button>
+          </div>
+          <div v-else class="mt-64">
+            <a-empty />
+          </div>
         </div>
-        <div
-          v-if="showLoadingMore && data.length !== 0"
-          :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
-        >
-          <a-spin v-if="loadingMore" />
-          <a-button v-else @click="onLoadMore">
-            loading more
-          </a-button>
-        </div>
-        <div v-else class="mt-64">
-          <a-empty />
-        </div>
-      </div>
-    </a-spin>
+      </a-spin>
+    </div>
+    <div class="a-s-reply pl-32">
+      <GraphicReplyList ref="graphicReplyList" />
+    </div>
   </div>
 </template>
 
 <script>
 import store from '@/store'
 import { formatTime } from '@/utils/time'
+import GraphicReplyList from '@/views/manage/comment/components/GraphicReplyList'
 
 export default {
   name: 'AskCommentList',
+  components: { GraphicReplyList },
   props: {
     type: {
       type: String,
@@ -70,7 +78,10 @@ export default {
       }).then(res => {
         if (res.status === 'SUCCESS') {
           this.loading = false
-          this.data = res.data.data
+          this.data = res.data ? res.data.data : []
+          if (this.data && this.data.length > 0) {
+            this.viewCommentClick(this.data[0])
+          }
         }
       })
     },
@@ -85,10 +96,14 @@ export default {
         type: this.type
       }).then(res => {
         if (res.status === 'SUCCESS') {
-          this.data = this.data.concat(res.data.data)
+          this.data = this.data.concat(res.data ? res.data.data : [])
           this.loadingMore = false
         }
       })
+    },
+    viewCommentClick(data) {
+      this.$refs.graphicReplyList.graphicReplyData = data
+      this.$refs.graphicReplyList.loadViewData()
     }
   }
 }
@@ -116,6 +131,9 @@ export default {
         color: #222;
       }
     }
+  }
+  .a-s-reply{
+      width: 50%;
   }
 }
 </style>

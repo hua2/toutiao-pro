@@ -25,19 +25,8 @@
             </div>
             <div class="g-r-reply mt-12 flex items-center justify-between">
               <div>{{ formatTime(g.updateDate) }}</div>
-              <div v-if="userId === g.uid">
-                <a href="javascript:;">
-                  <a-popconfirm
-                    title="确定执行此操作？"
-                    ok-text="确定"
-                    cancel-text="取消"
-                    @confirm="deleteCommentMedia(g.id)"
-                  >
-                    删除
-                  </a-popconfirm>
-                </a></div>
-              <div v-else class="flex">
-                <p @click="replyClick()">{{ show?'取消回复':'回复' }} <span v-if="g.commentNum">{{ g.commentNum }}</span></p>
+              <div class="flex">
+                <p @click="replyClick(g)">{{ g.show?'取消回复':'回复' }} <span v-if="g.commentNum">{{ g.commentNum }}</span></p>
                 <p> <span
                       v-if="g.isPraise === 0"
                       @click="praiseCommentMedia(g.id, 1)"
@@ -71,7 +60,7 @@
                             title="确定执行此操作？"
                             ok-text="确定"
                             cancel-text="取消"
-                            @confirm="deleteCommentMedia(co.id)"
+                            @confirm="deleteCommentMedia(g.id)"
                           >
                             删除
                           </a-popconfirm>
@@ -82,14 +71,14 @@
                 </p>
               </div>
             </div>
-            <div v-if="show" class="mt-16 mb-12">
+            <div v-if="g.show" class="mt-16 mb-12">
               <a-textarea
                 v-model="content"
                 placeholder="积极回复可吸引更多人评论"
                 :rows="4"
               />
               <div class="flex justify-end mt-12">
-                <a-button type="primary" :disabled="content===''" @click="publishComment(graphicReplyData.type,g.aid)">发布</a-button>
+                <a-button type="primary" :disabled="content===''" @click="publishComment(graphicReplyData.type,g.aid,g.id,g.uid)">发布</a-button>
               </div>
             </div>
           </div>
@@ -107,15 +96,19 @@
           <a-empty description="暂无评论" />
         </div>
       </div>
-    </a-spin></div>
+    </a-spin>
+    <SecondReplyList ref="secondReplyList" @changeList="loadViewData" />
+  </div>
 </template>
 
 <script>
 import store from '@/store'
 import { formatTime } from '@/utils/time'
+import SecondReplyList from '@/views/manage/comment/components/SecondReplyList'
 
 export default {
   name: 'GraphicReplyList',
+  components: { SecondReplyList },
   data() {
     return {
       graphicReplyData: {
@@ -126,23 +119,13 @@ export default {
         stick: 0,
         type: 0
       },
-
       loading: true,
       loadingMore: false,
       showLoadingMore: true,
       data: [],
       pageSize: 10,
       pageNumber: 1,
-      show: false,
-      showReply: false,
-      showDelete: true,
-      content: '',
-      replyContent: '' // 评论列表回复
-    }
-  },
-  computed: {
-    userId() {
-      return this.$store.state.user.userId
+      content: ''
     }
   },
   methods: {
@@ -151,7 +134,6 @@ export default {
       this.$api.work.findPage({
         pageNumber: this.pageNumber,
         pageSize: this.pageSize,
-        // replyPid: this.graphicReplyData.id,
         uid: store.state.user.userId,
         aid: this.graphicReplyData.id,
         type: this.graphicReplyData.type
@@ -169,7 +151,6 @@ export default {
         pageNumber: this.pageNumber,
         pageSize: this.pageSize,
         uid: store.state.user.userId,
-        // replyPid: this.graphicReplyData.id,
         aid: this.graphicReplyData.id,
         type: this.graphicReplyData.type
       }).then(res => {
@@ -189,8 +170,20 @@ export default {
         }
       })
     },
-    replyClick() {
-      this.show = !this.show
+    replyClick(data) {
+      data.show = !data.show
+      this.$refs.secondReplyList.show = data.show
+      if (data.show) {
+        this.data = this.data.map(d => {
+          d.show = false
+          return d
+        })
+        this.content = ''
+        data.show = true
+        this.$refs.secondReplyList.replyData = data
+        this.$refs.secondReplyList.loadData()
+      }
+      this.$forceUpdate()
     },
     mediaCommentStick(num, value, aid) {
       this.$api.work.mediaCommentStick({
@@ -218,19 +211,18 @@ export default {
           }
         })
     },
-    publishComment(type, aid) {
+    publishComment(type, aid, id, uid) {
       this.$api.work.publishComment({
         uid: this.$store.state.user.userId,
         aid: aid,
         type: type,
-        replyId: 0,
-        replyPid: 0,
-        replyUid: '',
+        replyId: id,
+        replyPid: id,
+        replyUid: uid,
         content: this.content
       }).then(res => {
         if (res.status === 'SUCCESS') {
           this.$message.success('发布成功')
-          this.show = false
           this.loadViewData()
         }
       })

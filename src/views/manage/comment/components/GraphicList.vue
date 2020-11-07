@@ -100,7 +100,7 @@ export default {
       }).then(res => {
         if (res.status === 'SUCCESS') {
           this.loading = false
-          this.data = res.data.data
+          this.data = res.data ? res.data.data : []
           if (this.data && this.data.length > 0) {
             this.viewCommentClick(this.data[0])
           }
@@ -119,14 +119,13 @@ export default {
         type: this.type
       }).then(res => {
         if (res.status === 'SUCCESS') {
-          this.data = this.data.concat(res.data.data)
+          this.data = this.data.concat(res.data ? res.data.data : [])
           this.loadingMore = false
         }
       })
     },
     formatTime,
     viewCommentClick(data) {
-      console.log(data)
       this.$refs.graphicReplyList.graphicReplyData = data
       this.$refs.graphicReplyList.loadViewData()
     }
@@ -179,7 +178,7 @@ export default {
       }
     }
     .graphic-right {
-      width: 66.6%;
+      width: 50%;
     }
   }
 

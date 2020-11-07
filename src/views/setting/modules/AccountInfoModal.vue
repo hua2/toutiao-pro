@@ -11,7 +11,7 @@
       @cancel="handleCancel"
     >
       <a-textarea
-        v-model="userInfo"
+        v-model="message"
         maxlength="30"
         :rows="1"
         @input="descInput"
@@ -30,30 +30,37 @@ export default {
   data() {
     return {
       remnant: 0,
-      userInfo: '',
+      message: '',
       visible: false,
       confirmLoading: false
     }
   },
   methods: {
     descInput() {
-      const txtVal = this.userInfo.length
+      const txtVal = this.message.length
       this.remnant = 0 + txtVal
     },
     showInfoModal() {
       this.visible = true
     },
     handleOk(e) {
-      console.log('Clicked e', e)
       this.confirmLoading = true
-      setTimeout(() => {
-        this.visible = false
-        this.confirmLoading = false
-        this.handleClear()
-      }, 2000)
+      this.$api.user
+        .updateSign({
+          id: this.$store.state.user.userId,
+          sign: this.message
+        })
+        .then(res => {
+          if (res.status === 'SUCCESS') {
+            this.visible = false
+            this.confirmLoading = false
+            this.$store.dispatch('GetInfo')
+            this.handleClear()
+          }
+        })
     },
     handleClear() {
-      this.userInfo = ''
+      this.message = ''
       this.remnant = 0
     },
     handleCancel(e) {
