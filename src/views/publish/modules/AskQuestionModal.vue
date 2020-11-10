@@ -7,13 +7,13 @@
       width="720px"
       cancel-text="取消"
       ok-text="确定"
-      class="update-modal"
+      class="ask-question-modal"
       @ok="handleOk"
       @cancel="handleCancel"
     >
       <div class="mb-16">
         <a-textarea
-          v-model="formData.title"
+          v-model="title"
           maxlength="30"
           :rows="1"
           @input="descInput"
@@ -43,7 +43,7 @@
 </template>
 <script>
 export default {
-  name: 'UpdateModal',
+  name: 'AskQuestionModal',
   data() {
     return {
       visible: false,
@@ -55,10 +55,7 @@ export default {
         firstImg: null
       },
       remnant: 0,
-      formData: {
-        title: '',
-        content: ''
-      },
+      title: '',
       id: undefined
     }
   },
@@ -67,31 +64,22 @@ export default {
       const txtVal = this.title.length
       this.remnant = 0 + txtVal
     },
-    showUpdateModal() {
+    showAskQuestionModal() {
       this.visible = true
-    },
-    findOne() {
-      this.$api.work.findOne({
-        id: this.id
-      }).then(res => {
-        if (res.status === 'SUCCESS') {
-          this.formData = res.data
-          this.urls.firstImg = res.data.firstImg
-        }
-      })
     },
     handleOk(e) {
       this.confirmLoading = true
-      this.$api.work.updateMedia({
+      this.$api.work.publishMedia({
         ...this.urls,
-        ...this.formData,
-        id: this.id,
-        type: 2
+        type: 2,
+        uid: this.$store.state.user.userId,
+        title: this.title
       }).then(res => {
         if (res.status === 'SUCCESS') {
-          this.visible = false
-          this.confirmLoading = false
-          this.$emit('updateModal')
+          this.$message.success('发布成功')
+          this.$router.push('/manage/works/index')
+        } else {
+          this.$message.warning(res.message)
         }
       })
     },
@@ -105,7 +93,6 @@ export default {
           if (res.status === 'SUCCESS') {
             this.urls[type] = res.data
             this.uploading[type] = false
-            console.log(this.urls)
             this.$message.success('上传成功')
           }
         })
@@ -125,7 +112,7 @@ export default {
 }
 </script>
 <style scoped lang="less">
-  .update-modal {
+  .ask-question-modal {
     .pic-upload{
       img{
         width: 88px;

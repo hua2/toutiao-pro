@@ -7,7 +7,8 @@
         style="width: 200px"
         @search="searchData"
       />
-      <a-button class="ml-24" @click="searchData">搜索</a-button>
+      <a-button class="ml-24" @click="askQuestionClick">提问</a-button>
+      <AskQuestionModal ref="askQuestionModal" />
     </div>
     <a-spin :spinning="loading">
       <div class="w-full" style="min-height: 600px">
@@ -57,9 +58,11 @@
 
 <script>
 import store from '@/store'
+import AskQuestionModal from '@/views/publish/modules/AskQuestionModal'
 
 export default {
   name: 'QuestionList',
+  components: { AskQuestionModal },
   props: {
     show: {
       type: Boolean,
@@ -81,6 +84,9 @@ export default {
     this.loadData()
   },
   methods: {
+    askQuestionClick() {
+      this.$refs.askQuestionModal.showAskQuestionModal()
+    },
     askClick(id) {
       if (id) {
         this.$router.push({

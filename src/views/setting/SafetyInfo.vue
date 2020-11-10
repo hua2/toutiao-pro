@@ -8,7 +8,7 @@
             <div class="label">安全评分</div>
             <div class="content">
               <div class="account-info">
-<!--                <a-progress :percent="30" style="width: 40%" />-->
+                <!--                <a-progress :percent="30" style="width: 40%" />-->
                 <div class="mt-24">
                   <div class="account-info-title">
                     你的帐号存在安全风险，建议优化以下 2 项
